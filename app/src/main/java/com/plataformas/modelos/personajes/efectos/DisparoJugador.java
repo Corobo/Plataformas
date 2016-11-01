@@ -46,7 +46,7 @@ public class DisparoJugador extends Modelo {
     }
 
     public void dibujar(Canvas canvas){
-        sprite.dibujarSprite(canvas, (int) x - Nivel.scrollEjeX, (int) y);
+        sprite.dibujarSprite(canvas, (int) x - Nivel.scrollEjeX, (int) y + Nivel.scrollEjeY);
     }
 }
 

@@ -21,7 +21,7 @@ public class Meta extends Modelo {
 
 
     public void dibujar(Canvas canvas){
-        int yArriva = (int)  y - altura / 2;
+        int yArriva = (int)  y - altura / 2 + Nivel.scrollEjeY;
         int xIzquierda = (int) x - ancho / 2 - Nivel.scrollEjeX;
 
         imagen.setBounds(xIzquierda, yArriva, xIzquierda
