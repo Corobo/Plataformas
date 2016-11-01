@@ -42,7 +42,6 @@ public class Nivel {
     public boolean botonSaltarPulsado = false;
 
     public static int scrollEjeX = 0;
-    public static int scrollEjeY = 0;
     private float velocidadGravedad = 0.8f;
     private float velocidadMaximaCaida = 10;
 
@@ -71,7 +70,6 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         scrollEjeX = 0;
-        scrollEjeY = 0;
         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
         nivelPausado = true;
 
@@ -261,26 +259,6 @@ public class Nivel {
                 scrollEjeX -= (int) (GameView.pantallaAncho*0.3 -(jugador .x - scrollEjeX));
                 Log.v("Fondo.mover","Fondo.mover: Scroll reducido");
             }
-        /*
-        if( jugador.y > tilesEnDistanciaY(GameView.pantallaAlto*0.3) * Tile.altura){
-            if( jugador .y - scrollEjeY > GameView.pantallaAlto * 0.7 ){
-                fondos[0].moverY((int) ((jugador .y - scrollEjeY) - GameView.pantallaAlto* 0.7));
-                fondos[1].moverY((int) ((jugador .y - scrollEjeY) - GameView.pantallaAlto* 0.7));
-                scrollEjeY += (int) ((jugador .y - scrollEjeY) - GameView.pantallaAlto* 0.7);
-                Log.v("Fondo.mover","Fondo.mover: Scroll aumentado");
-
-            }
-        }
-        if( jugador.y < (altoMapaTiles() - tilesEnDistanciaY( GameView.pantallaAlto*0.3)) * Tile.altura){
-            if( jugador .y - scrollEjeY < GameView.pantallaAlto *0.3 ) {
-                fondos[0].moverY(-(int) (GameView.pantallaAlto * 0.3 - (jugador.y - scrollEjeY)));
-                fondos[1].moverY(-(int) (GameView.pantallaAlto * 0.3 - (jugador.y - scrollEjeY)));
-                scrollEjeY -= (int) (GameView.pantallaAlto * 0.3 - (jugador.y - scrollEjeY));
-                Log.v("Fondo.mover", "Fondo.mover: Scroll reducido");
-            }
-        }
-        */
-
 
 
 
@@ -299,9 +277,9 @@ public class Nivel {
 
                     mapaTiles[x][y].imagen.setBounds(
                             (x * Tile.ancho) - scrollEjeX,
-                            (y * Tile.altura) + scrollEjeY,
+                            (y * Tile.altura),
                             (x * Tile.ancho) + Tile.ancho - scrollEjeX,
-                            (y * Tile.altura + Tile.altura) + scrollEjeY);
+                            (y * Tile.altura + Tile.altura));
 
                     mapaTiles[x][y].imagen.draw(canvas);
                 }

@@ -14,7 +14,6 @@ public class Fondo extends Modelo {
     Bitmap fondo;
     Bitmap fondoAux;
     float velocidadX;
-    float velocidadY;
 
     public Fondo(Context context, Bitmap imagen, float velocidadX) {
         super(context,
@@ -28,7 +27,6 @@ public class Fondo extends Modelo {
             fondoAux = imagen;
         }
         this.velocidadX = velocidadX;
-        this.velocidadY = velocidadX;
         if ( ancho%2f != 0f){
             ancho++;
         }
@@ -48,23 +46,6 @@ public class Fondo extends Modelo {
             }
             if (x < -ancho / 2) {
                 x = ancho / 2;
-            }
-        }
-    }
-    public void moverY(double movimientoScroll){
-        if( velocidadY > 0) {
-
-            if (movimientoScroll > 0.1) {
-                y -= velocidadY;
-            } else if (movimientoScroll < -0.1) {
-                y += velocidadY;
-            }
-
-            if (y > altura / 2) {
-                y = -altura / 2;
-            }
-            if (y < -altura / 2) {
-                y = altura / 2;
             }
         }
     }
