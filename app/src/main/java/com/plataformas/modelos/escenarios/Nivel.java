@@ -15,6 +15,8 @@ import com.plataformas.global.Estado;
 import com.plataformas.modelos.controles.IconoVida;
 import com.plataformas.modelos.personajes.efectos.DisparoJugador;
 import com.plataformas.modelos.personajes.enemigos.Enemigo;
+import com.plataformas.modelos.personajes.enemigos.EnemigoAmpliacion;
+import com.plataformas.modelos.personajes.enemigos.EnemigoBasico;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 import com.plataformas.modelos.recolectables.Meta;
 import com.plataformas.modelos.recolectables.Recolectable;
@@ -207,7 +209,15 @@ public class Nivel {
                 // Posición centro abajo
                 int xCentroAbajoTileE = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileE = y * Tile.altura + Tile.altura;
-                enemigos.add(new Enemigo(context, xCentroAbajoTileE, yCentroAbajoTileE));
+                enemigos.add(new EnemigoBasico(context, xCentroAbajoTileE, yCentroAbajoTileE));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'N':
+                // Enemigo
+                // Posición centro abajo
+                int xCentroAbajoTileN = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileN = y * Tile.altura + Tile.altura;
+                enemigos.add(new EnemigoAmpliacion(context, xCentroAbajoTileN, yCentroAbajoTileN));
 
                 return new Tile(null, Tile.PASABLE);
             case '1':
@@ -262,6 +272,11 @@ public class Nivel {
                 Log.v("Fondo.mover","Fondo.mover: Scroll reducido");
             }
 
+        int derecha = izquierda +
+                GameView.pantallaAncho / Tile.ancho + 1;
+
+        derecha = Math.min(derecha, anchoMapaTiles() - 1);
+
         int arriba = (int) (tileYJugador - tilesEnDistanciaY(jugador.y - scrollEjeY));
         arriba = Math.max(0,arriba);
 
@@ -271,11 +286,9 @@ public class Nivel {
                 scrollEjeY += (int) ((jugador .y - scrollEjeY) - GameView.pantallaAlto* 0.7);
 
 
-
         if ( jugador .y  > GameView.pantallaAlto*0.3 )
             if( jugador .y - scrollEjeY < GameView.pantallaAlto *0.3 )
                 scrollEjeY -= (int) (GameView.pantallaAlto*0.3 -(jugador .y - scrollEjeY));
-
 
 
         int abajo = arriba +
@@ -283,10 +296,7 @@ public class Nivel {
 
         abajo = Math.min(abajo, altoMapaTiles() - 1);
 
-        int derecha = izquierda +
-                GameView.pantallaAncho / Tile.ancho + 1;
 
-        derecha = Math.min(derecha, anchoMapaTiles() - 1);
 
         for (int y = arriba; y <= abajo; ++y) {
             for (int x = izquierda; x <= derecha; ++x) {

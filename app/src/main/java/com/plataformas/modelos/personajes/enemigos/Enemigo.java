@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 
 public class Enemigo extends Modelo {
+
     public static final String CAMINANDO_DERECHA = "Caminando_derecha";
     public static final String CAMINANDO_IZQUIERDA = "caminando_izquierda";
 
@@ -24,8 +25,12 @@ public class Enemigo extends Modelo {
     public static final String MUERTE_IZQUIERDA = "muerte_izquierda";
 
 
-    private Sprite sprite;
-    private HashMap<String,Sprite> sprites = new HashMap<String,Sprite>();
+    protected Sprite sprite;
+    protected HashMap<String,Sprite> sprites = new HashMap<String,Sprite>();
+    protected int enemyRight;
+    protected int enemyLeft;
+    protected int enemyDieRight;
+    protected int enemyDieLeft;
 
     public double velocidadX = 1.2;
 
