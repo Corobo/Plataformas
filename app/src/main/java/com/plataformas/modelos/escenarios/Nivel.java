@@ -42,6 +42,7 @@ public class Nivel {
     public boolean botonSaltarPulsado = false;
 
     public static int scrollEjeX = 0;
+    public static int scrollEjeY = 0;
     private float velocidadGravedad = 0.8f;
     private float velocidadMaximaCaida = 10;
 
@@ -238,9 +239,11 @@ public class Nivel {
     private void dibujarTiles(Canvas canvas) {
 
         int tileXJugador = (int) jugador.x / Tile.ancho;
+        int tileYJugador = (int) jugador.y / Tile.altura;
         int izquierda = (int) (tileXJugador - tilesEnDistanciaX(jugador.x - scrollEjeX));
         izquierda = Math.max(0,izquierda); // Que nunca sea < 0, ej -1
-
+        int arriba = (int) (tileYJugador - tilesEnDistanciaY(jugador.y - scrollEjeY));
+        arriba = Math.max(0,arriba);
         if ( jugador.x  <
                 (anchoMapaTiles() - tilesEnDistanciaX( GameView.pantallaAncho*0.3)) * Tile.ancho )
             if( jugador .x - scrollEjeX > GameView.pantallaAncho * 0.7 ){
@@ -260,6 +263,14 @@ public class Nivel {
                 Log.v("Fondo.mover","Fondo.mover: Scroll reducido");
             }
 
+        if( jugador.y > (altoMapaTiles() - tilesEnDistanciaY(GameView.pantallaAlto*0.3)) * Tile.altura)
+            if(jugador.y - scrollEjeY < GameView.pantallaAlto*0.3)
+                scrollEjeY -= (int) (GameView.pantallaAlto*0.3) - (jugador.y - scrollEjeY);
+
+        if( jugador.y < tilesEnDistanciaY(GameView.pantallaAlto*0.7)*Tile.altura)
+            if(jugador.y - scrollEjeY > GameView.pantallaAlto*0.7)
+                scrollEjeY+= (int) ((jugador .y - scrollEjeY)- GameView.pantallaAlto*0.7);
+
 
 
         int derecha = izquierda +
@@ -268,8 +279,10 @@ public class Nivel {
         // el ultimo tile visible, no puede superar el tamaño del mapa
         derecha = Math.min(derecha, anchoMapaTiles() - 1);
 
+        int abajo = arriba - GameView.pantallaAlto / Tile.altura -1;
+        arriba = Math.max(abajo,altoMapaTiles() +1);
 
-        for (int y = 0; y < altoMapaTiles(); ++y) {
+        for (int y = arriba; y <= abajo; ++y) {
             for (int x = izquierda; x <= derecha; ++x) {
                 if (mapaTiles[x][y].imagen != null) {
                     // Calcular la posición en pantalla correspondiente
@@ -277,9 +290,9 @@ public class Nivel {
 
                     mapaTiles[x][y].imagen.setBounds(
                             (x * Tile.ancho) - scrollEjeX,
-                            (y * Tile.altura),
+                            (y * Tile.altura) - scrollEjeY,
                             (x * Tile.ancho) + Tile.ancho - scrollEjeX,
-                            (y * Tile.altura + Tile.altura));
+                            (y * Tile.altura + Tile.altura) - scrollEjeY);
 
                     mapaTiles[x][y].imagen.draw(canvas);
                 }

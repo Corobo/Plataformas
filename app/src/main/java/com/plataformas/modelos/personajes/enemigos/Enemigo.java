@@ -112,7 +112,7 @@ public class Enemigo extends Modelo {
     }
 
     public void dibujar(Canvas canvas){
-        sprite.dibujarSprite(canvas, (int) x - Nivel.scrollEjeX, (int) y);
+        sprite.dibujarSprite(canvas, (int) x - Nivel.scrollEjeX, (int) y - Nivel.scrollEjeY);
     }
     public void destruir (){
         velocidadX = 0;

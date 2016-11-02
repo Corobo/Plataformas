@@ -58,7 +58,7 @@ public class Recolectable extends Modelo {
     }
 
     public void dibujar(Canvas canvas){
-        sprite.dibujarSprite(canvas, (int)x - Nivel.scrollEjeX , (int)y );
+        sprite.dibujarSprite(canvas, (int)x - Nivel.scrollEjeX , (int)y - Nivel.scrollEjeY );
     }
 
     public void actualizar(long tiempo){
