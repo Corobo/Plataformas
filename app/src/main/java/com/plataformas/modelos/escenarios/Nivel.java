@@ -76,6 +76,7 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         scrollEjeX = 0;
+        scrollEjeY = 0;
         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
         nivelPausado = true;
         GameView.contador.reiniciarPuntuacion();
@@ -256,7 +257,6 @@ public class Nivel {
     private void dibujarTiles(Canvas canvas) {
 
         int tileXJugador = (int) jugador.x / Tile.ancho;
-        int tileYJugador = (int) jugador.y / Tile.altura;
         int izquierda = (int) (tileXJugador - tilesEnDistanciaX(jugador.x - scrollEjeX));
         izquierda = Math.max(0,izquierda); // Que nunca sea < 0, ej -1
         if ( jugador.x  <
@@ -278,6 +278,13 @@ public class Nivel {
                 Log.v("Fondo.mover","Fondo.mover: Scroll reducido");
             }
 
+        int derecha = izquierda +
+                GameView.pantallaAncho / Tile.ancho + 1;
+
+        derecha = Math.min(derecha, anchoMapaTiles() - 1);
+
+        int tileYJugador = (int) jugador.y / Tile.altura;
+
         int arriba = (int) (tileYJugador - tilesEnDistanciaY(jugador.y - scrollEjeY));
         arriba = Math.max(0,arriba);
 
@@ -287,11 +294,9 @@ public class Nivel {
                 scrollEjeY += (int) ((jugador .y - scrollEjeY) - GameView.pantallaAlto* 0.7);
 
 
-
         if ( jugador .y  > GameView.pantallaAlto*0.3 )
             if( jugador .y - scrollEjeY < GameView.pantallaAlto *0.3 )
                 scrollEjeY -= (int) (GameView.pantallaAlto*0.3 -(jugador .y - scrollEjeY));
-
 
 
         int abajo = arriba +
@@ -299,10 +304,6 @@ public class Nivel {
 
         abajo = Math.min(abajo, altoMapaTiles() - 1);
 
-        int derecha = izquierda +
-                GameView.pantallaAncho / Tile.ancho + 1;
-
-        derecha = Math.min(derecha, anchoMapaTiles() - 1);
 
         for (int y = arriba; y <= abajo; ++y) {
             for (int x = izquierda; x <= derecha; ++x) {
@@ -455,12 +456,10 @@ public class Nivel {
 
                 if(jugador.colisiona(enemigo)){
                     if(jugador.golpeado() <= 0){
-                        scrollEjeX = 0;
-                        scrollEjeY = 0;
                         nivelPausado = true;
                         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
-                        jugador.restablecerPosicionInicial();
                         inicializar();
+                        jugador.restablecerPosicionInicial();
                         return;
                     }
                 }
@@ -612,12 +611,11 @@ public class Nivel {
             }
             if (disparoEnemigo.colisiona(jugador)){
                 if(jugador.golpeado() <= 0){
-                    scrollEjeX = 0;
-                    scrollEjeY = 0;
                     nivelPausado = true;
                     mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
-                    jugador.restablecerPosicionInicial();
                     inicializar();
+                    jugador.restablecerPosicionInicial();
+                    return;
                 }
              }
         }
@@ -804,12 +802,10 @@ public class Nivel {
 
                 if (jugador.y + jugador.altura / 2 > GameView.pantallaAlto) {
                     // ha perdido
-                    scrollEjeX = 0;
-                    scrollEjeY = 0;
                     nivelPausado = true;
                     mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
-                    jugador.restablecerPosicionInicial();
                     inicializar();
+                    jugador.restablecerPosicionInicial();
                 }
 
             }
