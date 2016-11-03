@@ -14,6 +14,9 @@ public class DisparoEnemigo extends Disparo{
     public DisparoEnemigo(Context context, double xInicial, double yInicial, int orientacion) {
         super(context, xInicial, yInicial);
 
+        if (orientacion == Enemigo.IZQUIERDA)
+            velocidadX = velocidadX*-1;
+
         cDerecha = 6;
         cIzquierda = 6;
         cArriba = 6;

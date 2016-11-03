@@ -95,15 +95,15 @@ public class Enemigo extends Modelo {
 
             if (velocidadX > 0) {
                 sprite = sprites.get(CAMINANDO_DERECHA);
+                orientacion = DERECHA;
             }
             if (velocidadX < 0) {
                 sprite = sprites.get(CAMINANDO_IZQUIERDA);
+                orientacion = IZQUIERDA;
             }
 
         }
     }
-
-
 
     public void girar(){
         velocidadX = velocidadX*-1;

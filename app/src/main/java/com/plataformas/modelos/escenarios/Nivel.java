@@ -455,17 +455,17 @@ public class Nivel {
 
                 if(jugador.colisiona(enemigo)){
                     if(jugador.golpeado() <= 0){
-                        jugador.restablecerPosicionInicial();
                         scrollEjeX = 0;
                         scrollEjeY = 0;
                         nivelPausado = true;
                         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
+                        jugador.restablecerPosicionInicial();
                         inicializar();
                         return;
                     }
                 }
                 long tiempo = System.currentTimeMillis();
-                if (enemigo.estado== Estado.ACTIVO){
+                if (enemigo.estado == Estado.ACTIVO){
                         if(enemigo instanceof EnemigoAmpliacion) {
                             DisparoEnemigo disparo = (DisparoEnemigo) ((EnemigoAmpliacion)enemigo).disparar(tiempo);
                             if (disparo != null) {
@@ -616,6 +616,7 @@ public class Nivel {
                     scrollEjeY = 0;
                     nivelPausado = true;
                     mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
+                    jugador.restablecerPosicionInicial();
                     inicializar();
                 }
              }
