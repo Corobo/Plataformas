@@ -13,6 +13,8 @@ import com.plataformas.gestores.CargadorGraficos;
 import com.plataformas.gestores.Utilidades;
 import com.plataformas.global.Estado;
 import com.plataformas.modelos.controles.IconoVida;
+import com.plataformas.modelos.personajes.efectos.Disparo;
+import com.plataformas.modelos.personajes.efectos.DisparoEnemigo;
 import com.plataformas.modelos.personajes.efectos.DisparoJugador;
 import com.plataformas.modelos.personajes.enemigos.Enemigo;
 import com.plataformas.modelos.personajes.enemigos.EnemigoAmpliacion;
@@ -50,7 +52,8 @@ public class Nivel {
 
     private List<Enemigo> enemigos;
 
-    private List<DisparoJugador> disparosJugador;
+    private List<Disparo> disparosJugador;
+    private List<Disparo> disparosEnemigos;
 
     private List<Recolectable> recolectables = new ArrayList<>();
 
@@ -75,9 +78,10 @@ public class Nivel {
         scrollEjeX = 0;
         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
         nivelPausado = true;
-
+        GameView.contador.reiniciarPuntuacion();
         enemigos = new LinkedList<Enemigo>();
-        disparosJugador = new LinkedList<DisparoJugador>();
+        disparosJugador = new LinkedList<Disparo>();
+        disparosEnemigos = new LinkedList<Disparo>();
         fondos = new Fondo[2];
         fondos[0] = new Fondo(context,CargadorGraficos.cargarBitmap(context,
                 R.drawable.capa1), 0);
@@ -104,7 +108,7 @@ public class Nivel {
             for (Recolectable n : recolectables) {
                 n.actualizar(tiempo);
             }
-            for(DisparoJugador disparoJugador: disparosJugador){
+            for(Disparo disparoJugador: disparosJugador){
                 disparoJugador.actualizar(tiempo);
             }
             jugador.procesarOrdenes(orientacionPad, botonSaltarPulsado,botonDispararPulsado);
@@ -129,8 +133,11 @@ public class Nivel {
             for (Recolectable n : recolectables) {
                 n.dibujar(canvas);
             }
-            for(DisparoJugador disparoJugador: disparosJugador){
+            for(Disparo disparoJugador: disparosJugador){
                 disparoJugador.dibujar(canvas);
+            }
+            for(Disparo disparoEnemigo: disparosEnemigos){
+                disparoEnemigo.dibujar(canvas);
             }
             jugador.dibujar(canvas);
             for (Enemigo enemigo : enemigos) {
@@ -331,9 +338,9 @@ public class Nivel {
                 = (int) (jugador.y - (jugador.altura / 2 - 1)) / Tile.altura;
 
 
-        for (Iterator<DisparoJugador> iterator = disparosJugador.iterator(); iterator.hasNext();) {
+        for (Iterator<Disparo> iterator = disparosJugador.iterator(); iterator.hasNext();) {
 
-            DisparoJugador disparoJugador = iterator.next();
+            DisparoJugador disparoJugador = (DisparoJugador) iterator.next();
 
             int tileXDisparo = (int)disparoJugador.x / Tile.ancho ;
             int tileYDisparoInferior =
@@ -450,11 +457,22 @@ public class Nivel {
                     if(jugador.golpeado() <= 0){
                         jugador.restablecerPosicionInicial();
                         scrollEjeX = 0;
+                        scrollEjeY = 0;
                         nivelPausado = true;
                         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
+                        inicializar();
                         return;
                     }
                 }
+                long tiempo = System.currentTimeMillis();
+                if (enemigo.estado== Estado.ACTIVO){
+                        if(enemigo instanceof EnemigoAmpliacion) {
+                            DisparoEnemigo disparo = (DisparoEnemigo) ((EnemigoAmpliacion)enemigo).disparar(tiempo);
+                            if (disparo != null) {
+                                disparosEnemigos.add(disparo);
+                            }
+                        }
+                    }
             }
 
 
@@ -525,6 +543,83 @@ public class Nivel {
 
         }
 
+        for (Iterator<Disparo> iterator = disparosEnemigos.iterator(); iterator.hasNext();) {
+            DisparoEnemigo disparoEnemigo = (DisparoEnemigo) iterator.next();
+
+            int tileXDisparo = (int) disparoEnemigo.x / Tile.ancho;
+            int tileYDisparoInferior =
+                    (int) (disparoEnemigo.y + disparoEnemigo.cAbajo) / Tile.altura;
+
+            int tileYDisparoSuperior =
+                    (int) (disparoEnemigo.y - disparoEnemigo.cArriba) / Tile.altura;
+            //derecha
+            if (disparoEnemigo.velocidadX > 0) {
+                // Tiene delante un tile pasable, puede avanzar.
+                if (tileXDisparo + 1 <= anchoMapaTiles() - 1 &&
+                        mapaTiles[tileXDisparo + 1][tileYDisparoInferior].tipoDeColision
+                                == Tile.PASABLE &&
+                        mapaTiles[tileXDisparo + 1][tileYDisparoSuperior].tipoDeColision
+                                == Tile.PASABLE) {
+
+                    disparoEnemigo.x += disparoEnemigo.velocidadX;
+
+                } else if (tileXDisparo <= anchoMapaTiles() - 1) {
+
+                    int TileDisparoBordeDerecho = tileXDisparo * Tile.ancho + Tile.ancho;
+                    double distanciaX =
+                            TileDisparoBordeDerecho - (disparoEnemigo.x + disparoEnemigo.cDerecha);
+
+                    if (distanciaX > 0) {
+                        double velocidadNecesaria =
+                                Math.min(distanciaX, disparoEnemigo.velocidadX);
+                        disparoEnemigo.x += velocidadNecesaria;
+                    } else {
+                        iterator.remove();
+                        continue;
+                    }
+                }
+
+            }
+            // izquierda
+            if (disparoEnemigo.velocidadX <= 0){
+                if (tileXDisparo-1 >= 0 &&
+                        tileYDisparoSuperior < altoMapaTiles()-1 &&
+                        mapaTiles[tileXDisparo-1][tileYDisparoSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXDisparo-1][tileYDisparoInferior].tipoDeColision ==
+                                Tile.PASABLE){
+
+                    disparoEnemigo.x +=  disparoEnemigo.velocidadX;
+
+                    // No tengo un tile PASABLE detras
+                    // o es el INICIO del nivel o es uno SOLIDO
+                } else if(tileXDisparo >= 0 ){
+                    // Si en el propio tile del jugador queda espacio para
+                    // avanzar más, avanzo
+                    int TileDisparoBordeIzquierdo = tileXDisparo*Tile.ancho ;
+                    double distanciaX =
+                            (disparoEnemigo.x - disparoEnemigo.cIzquierda) - TileDisparoBordeIzquierdo ;
+
+                    if( distanciaX  > 0) {
+                        double velocidadNecesaria =
+                                Utilidades.proximoACero(-distanciaX, disparoEnemigo.velocidadX);
+                        disparoEnemigo.x += velocidadNecesaria;
+                    } else {
+                        iterator.remove();
+                        continue;
+                    }
+                }
+            }
+            if (disparoEnemigo.colisiona(jugador)){
+                if(jugador.golpeado() <= 0){
+                    scrollEjeX = 0;
+                    scrollEjeY = 0;
+                    nivelPausado = true;
+                    mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
+                    inicializar();
+                }
+             }
+        }
         // Gravedad Jugador
         if (jugador.enElAire) {
             // Recordar los ejes:
@@ -709,9 +804,11 @@ public class Nivel {
                 if (jugador.y + jugador.altura / 2 > GameView.pantallaAlto) {
                     // ha perdido
                     scrollEjeX = 0;
+                    scrollEjeY = 0;
                     nivelPausado = true;
                     mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
                     jugador.restablecerPosicionInicial();
+                    inicializar();
                 }
 
             }

@@ -11,23 +11,17 @@ import com.plataformas.modelos.escenarios.Nivel;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 
 /**
- * Created by uo227602 on 19/10/2016.
+ * Created by uo227602 on 03/11/2016.
  */
 
-public class DisparoJugador extends Disparo {
+public class Disparo extends Modelo {
 
-    public DisparoJugador(Context context, double xInicial, double yInicial,int orientacion) {
-        super(context, xInicial, yInicial);
+    protected Sprite sprite;
+    public double velocidadX = 10;
 
-        if (orientacion == Jugador.IZQUIERDA)
-            velocidadX = velocidadX*-1;
+    public Disparo(Context context, double xInicial, double yInicial) {
+        super(context, xInicial, yInicial, 35, 35);
 
-        cDerecha = 6;
-        cIzquierda = 6;
-        cArriba = 6;
-        cAbajo = 6;
-
-        inicializar();
     }
 
     public void inicializar (){
@@ -45,5 +39,5 @@ public class DisparoJugador extends Disparo {
     public void dibujar(Canvas canvas){
         sprite.dibujarSprite(canvas, (int) x - Nivel.scrollEjeX, (int) y - Nivel.scrollEjeY);
     }
-}
 
+}

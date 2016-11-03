@@ -29,6 +29,9 @@ public class Contador extends Modelo {
     public void actualizarPuntuacion(int puntuacion){
         this.puntuacion+=puntuacion;
     }
+    public void reiniciarPuntuacion(){
+        this.puntuacion = 0;
+    }
 
     @Override
     public void dibujar(Canvas canvas){

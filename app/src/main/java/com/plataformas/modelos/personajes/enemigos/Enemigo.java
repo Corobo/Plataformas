@@ -28,9 +28,12 @@ public class Enemigo extends Modelo {
     protected HashMap<String,Sprite> sprites = new HashMap<String,Sprite>();
 
     public double velocidadX = 1.2;
-
-
+    protected int orientacion;
     public int estado;
+
+    public static final int DERECHA = 1;
+    public static final int IZQUIERDA = -1;
+
 
     public Enemigo(Context context, double xInicial, double yInicial) {
         super(context, 0, 0, 40, 40);
@@ -80,11 +83,14 @@ public class Enemigo extends Modelo {
             estado = Estado.ELIMINAR;
         }
         if (estado == Estado.INACTIVO){
-            if (velocidadX > 0)
+            if (velocidadX > 0) {
                 sprite = sprites.get(MUERTE_DERECHA);
-            else
+                orientacion = DERECHA;
+            }
+            else{
                 sprite = sprites.get(MUERTE_IZQUIERDA);
-
+                orientacion = IZQUIERDA;
+            }
         } else {
 
             if (velocidadX > 0) {

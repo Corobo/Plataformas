@@ -137,11 +137,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
     }
 
     protected void inicializar() throws Exception {
-        nivel = new Nivel(context,numeroNivel);
+        contador = new Contador(context);
         pad = new Pad(context);
         botonSaltar = new BotonSaltar(context);
         botonDisparar = new BotonDisparar(context);
-        contador = new Contador(context);
+        nivel = new Nivel(context,numeroNivel);
         nivel.gameView = this;
     }
 
