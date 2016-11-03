@@ -24,8 +24,8 @@ public class Enemigo extends Modelo {
     public static final String MUERTE_IZQUIERDA = "muerte_izquierda";
 
 
-    private Sprite sprite;
-    private HashMap<String,Sprite> sprites = new HashMap<String,Sprite>();
+    protected Sprite sprite;
+    protected HashMap<String,Sprite> sprites = new HashMap<String,Sprite>();
 
     public double velocidadX = 1.2;
 
@@ -38,14 +38,6 @@ public class Enemigo extends Modelo {
         this.x = xInicial;
         this.y = yInicial - altura/2;
 
-        cDerecha = 15;
-        cIzquierda = 15;
-        cArriba = 20;
-        cAbajo = 20;
-
-        estado = Estado.ACTIVO;
-
-        inicializar();
     }
 
     public void inicializar (){

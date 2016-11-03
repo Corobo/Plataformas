@@ -15,6 +15,8 @@ import com.plataformas.global.Estado;
 import com.plataformas.modelos.controles.IconoVida;
 import com.plataformas.modelos.personajes.efectos.DisparoJugador;
 import com.plataformas.modelos.personajes.enemigos.Enemigo;
+import com.plataformas.modelos.personajes.enemigos.EnemigoAmpliacion;
+import com.plataformas.modelos.personajes.enemigos.EnemigoBasico;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 import com.plataformas.modelos.recolectables.Meta;
 import com.plataformas.modelos.recolectables.Recolectable;
@@ -201,13 +203,20 @@ public class Nivel {
                 meta = new Meta(context,xCentroAbajoTileM,yCentroAbajoTileM);
 
                 return new Tile(null, Tile.PASABLE);
+            case 'N':
+                // Enemigo
+                // Posición centro abajo
+                int xCentroAbajoTileN = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileN = y * Tile.altura + Tile.altura;
+                enemigos.add(new EnemigoAmpliacion(context, xCentroAbajoTileN, yCentroAbajoTileN));
 
+                return new Tile(null, Tile.PASABLE);
             case 'E':
                 // Enemigo
                 // Posición centro abajo
                 int xCentroAbajoTileE = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileE = y * Tile.altura + Tile.altura;
-                enemigos.add(new Enemigo(context, xCentroAbajoTileE, yCentroAbajoTileE));
+                enemigos.add(new EnemigoBasico(context, xCentroAbajoTileE, yCentroAbajoTileE));
 
                 return new Tile(null, Tile.PASABLE);
             case '1':
