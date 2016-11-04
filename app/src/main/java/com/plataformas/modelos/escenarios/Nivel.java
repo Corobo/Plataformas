@@ -19,6 +19,7 @@ import com.plataformas.modelos.personajes.efectos.DisparoJugador;
 import com.plataformas.modelos.personajes.enemigos.Enemigo;
 import com.plataformas.modelos.personajes.enemigos.EnemigoAmpliacion;
 import com.plataformas.modelos.personajes.enemigos.EnemigoBasico;
+import com.plataformas.modelos.personajes.enemigos.EnemigoVolador;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 import com.plataformas.modelos.recolectables.Meta;
 import com.plataformas.modelos.recolectables.Recolectable;
@@ -217,6 +218,14 @@ public class Nivel {
                 int xCentroAbajoTileN = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileN = y * Tile.altura + Tile.altura;
                 enemigos.add(new EnemigoAmpliacion(context, xCentroAbajoTileN, yCentroAbajoTileN));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'V':
+                // Enemigo
+                // Posición centro abajo
+                int xCentroAbajoTileV = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileV = y * Tile.altura + Tile.altura;
+                enemigos.add(new EnemigoVolador(context, xCentroAbajoTileV, yCentroAbajoTileV));
 
                 return new Tile(null, Tile.PASABLE);
             case 'E':
@@ -450,6 +459,7 @@ public class Nivel {
             int tileYEnemigoSuperior =
                     (int) (enemigo.y - (enemigo.altura / 2 - 1)) / Tile.altura;
 
+
             int rango = 4;
             if (tileXJugadorIzquierda - rango < tileXEnemigoIzquierda &&
                     tileXJugadorIzquierda + rango > tileXEnemigoIzquierda){
@@ -488,6 +498,9 @@ public class Nivel {
                                 Tile.SOLIDO) {
 
                     enemigo.x += enemigo.velocidadX;
+                    if(enemigo instanceof EnemigoVolador)
+                        ((EnemigoVolador) enemigo).volar();
+
 
                     // Sino, me acerco al borde del que estoy
                 } else if (tileXEnemigoDerecha + 1 <= anchoMapaTiles() - 1) {
@@ -499,11 +512,19 @@ public class Nivel {
                         double velocidadNecesaria = Math.min(distanciaX, enemigo.velocidadX);
                         enemigo.x += velocidadNecesaria;
                     } else {
+                        if(enemigo instanceof EnemigoVolador) {
+                            ((EnemigoVolador) enemigo).volar();
+                            enemigo.x += enemigo.velocidadX;
+                        }
                         enemigo.girar();
                     }
 
                     // No hay Tile, o es el final del mapa
                 } else {
+                    if(enemigo instanceof EnemigoVolador) {
+                        ((EnemigoVolador) enemigo).volar();
+                         enemigo.x += enemigo.velocidadX;
+                    }
                     enemigo.girar();
                 }
             }
