@@ -19,6 +19,7 @@ import com.plataformas.modelos.personajes.efectos.DisparoJugador;
 import com.plataformas.modelos.personajes.enemigos.Enemigo;
 import com.plataformas.modelos.personajes.enemigos.EnemigoAmpliacion;
 import com.plataformas.modelos.personajes.enemigos.EnemigoBasico;
+import com.plataformas.modelos.personajes.enemigos.EnemigoVolador;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 import com.plataformas.modelos.recolectables.Meta;
 import com.plataformas.modelos.recolectables.Recolectable;
@@ -217,6 +218,14 @@ public class Nivel {
                 int xCentroAbajoTileN = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileN = y * Tile.altura + Tile.altura;
                 enemigos.add(new EnemigoAmpliacion(context, xCentroAbajoTileN, yCentroAbajoTileN));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'V':
+                // Enemigo
+                // Posición centro abajo
+                int xCentroAbajoTileV = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileV = y * Tile.altura + Tile.altura;
+                enemigos.add(new EnemigoVolador(context, xCentroAbajoTileV, yCentroAbajoTileV));
 
                 return new Tile(null, Tile.PASABLE);
             case 'E':
@@ -489,8 +498,22 @@ public class Nivel {
 
                     enemigo.x += enemigo.velocidadX;
 
+                // Enemigos voladores
+                }else if(tileXEnemigoDerecha + 1 <= anchoMapaTiles() - 1 &&
+                        mapaTiles[tileXEnemigoDerecha + 1][tileYEnemigoInferior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoDerecha + 1][tileYEnemigoCentro].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoDerecha + 1][tileYEnemigoSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoDerecha + 1][tileYEnemigoInferior + 1].tipoDeColision ==
+                                Tile.PASABLE && enemigo instanceof EnemigoVolador){
+
+                    enemigo.x += enemigo.velocidadX;
+                    ((EnemigoVolador) enemigo).volar();
+
                     // Sino, me acerco al borde del que estoy
-                } else if (tileXEnemigoDerecha + 1 <= anchoMapaTiles() - 1) {
+                }else if (tileXEnemigoDerecha + 1 <= anchoMapaTiles() - 1) {
 
                     int TileEnemigoDerecho = tileXEnemigoDerecha * Tile.ancho + Tile.ancho;
                     double distanciaX = TileEnemigoDerecho - (enemigo.x + enemigo.ancho / 2);
@@ -522,8 +545,20 @@ public class Nivel {
 
                     enemigo.x += enemigo.velocidadX;
 
-                    // Solido / borde del tile acercarse.
-                } else if (tileXEnemigoIzquierda - 1 >= 0) {
+                }else if(tileXEnemigoIzquierda - 1 >= 0 &&
+                        mapaTiles[tileXEnemigoIzquierda - 1][tileYEnemigoInferior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoIzquierda - 1][tileYEnemigoCentro].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoIzquierda - 1][tileYEnemigoSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXEnemigoIzquierda - 1][tileYEnemigoInferior + 1].tipoDeColision
+                                == Tile.PASABLE && enemigo instanceof EnemigoVolador){
+
+                    enemigo.x += enemigo.velocidadX;
+                    ((EnemigoVolador) enemigo).volar();
+
+                }else if (tileXEnemigoIzquierda - 1 >= 0) {
 
                     int TileEnemigoIzquierdo = tileXEnemigoIzquierda * Tile.ancho;
                     double distanciaX = (enemigo.x - enemigo.ancho / 2) - TileEnemigoIzquierdo;
