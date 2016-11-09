@@ -245,6 +245,8 @@ public class Jugador extends Modelo {
         this.x = xInicial;
         this.y = yInicial;
         orientacion = DERECHA;
+        enElAire = false;
+        saltoPendiente = false;
     }
 
 
@@ -270,6 +272,10 @@ public class Jugador extends Modelo {
     }
     public void setVelocidadY(float velocidadY){
         this.velocidadY = velocidadY;
+    }
+    public void setPosicionInicial(double xInicial,double yInicial){
+        this.xInicial=xInicial;
+        this.yInicial=yInicial;
     }
 
 

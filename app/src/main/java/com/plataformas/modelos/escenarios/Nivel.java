@@ -23,6 +23,7 @@ import com.plataformas.modelos.personajes.enemigos.EnemigoVolador;
 import com.plataformas.modelos.personajes.jugadores.Jugador;
 import com.plataformas.modelos.recolectables.Meta;
 import com.plataformas.modelos.recolectables.Recolectable;
+import com.plataformas.modelos.recolectables.SavePoint;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -56,7 +57,8 @@ public class Nivel {
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
 
-    private List<Recolectable> recolectables = new ArrayList<>();
+    private List<Recolectable> recolectables;
+    private List<SavePoint> savePoints;
 
     public boolean botonDispararPulsado = false;
 
@@ -64,6 +66,7 @@ public class Nivel {
 
     public Bitmap mensaje ;
     public boolean nivelPausado;
+    public boolean checkPoint;
 
     public Nivel(Context context, int numeroNivel) throws Exception {
         inicializado = false;
@@ -76,6 +79,10 @@ public class Nivel {
     }
 
     public void inicializar() throws Exception {
+
+        recolectables = new ArrayList<>();
+
+        savePoints = new ArrayList<>();
         scrollEjeX = 0;
         scrollEjeY = 0;
         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
@@ -144,6 +151,9 @@ public class Nivel {
             jugador.dibujar(canvas);
             for (Enemigo enemigo : enemigos) {
                 enemigo.dibujar(canvas);
+            }
+            for (SavePoint savePoint : savePoints){
+                savePoint.dibujar(canvas);
             }
             meta.dibujar(canvas);
             for(int i=0; i < jugador.vidas; i++)
@@ -241,7 +251,8 @@ public class Nivel {
                 // Posicion centro abajo
                 int xCentroAbajoTile = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTile = y * Tile.altura + Tile.altura;
-                jugador = new Jugador(context, xCentroAbajoTile, yCentroAbajoTile);
+                if(!checkPoint)
+                    jugador = new Jugador(context, xCentroAbajoTile, yCentroAbajoTile);
 
                 return new Tile(null, Tile.PASABLE);
             case '.':
@@ -255,6 +266,12 @@ public class Nivel {
                 int xCentroAbajoTileR = x * Tile.ancho + Tile.ancho/2;
                 int yCentroAbajoTileR = y * Tile.altura + Tile.altura;
                 recolectables.add(new Recolectable(context, xCentroAbajoTileR, yCentroAbajoTileR));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'A':
+                int xCentroAbajoTileA = x * Tile.ancho + Tile.ancho/2;
+                int yCentroAbajoTileA = y * Tile.altura + Tile.altura;
+                savePoints.add(new SavePoint(context, xCentroAbajoTileA, yCentroAbajoTileA));
 
                 return new Tile(null, Tile.PASABLE);
             default:
@@ -661,6 +678,16 @@ public class Nivel {
             jugador.setVelocidadY(jugador.getVelocidadY() + velocidadGravedad);
             if (jugador.getVelocidadY() > velocidadMaximaCaida) {
                 jugador.setVelocidadY(velocidadMaximaCaida);
+            }
+        }
+
+        for (Iterator<SavePoint> iterator = savePoints.iterator(); iterator.hasNext();) {
+            SavePoint savePoint = iterator.next();
+            if(jugador.colisiona(savePoint) && !savePoint.getSalvado()){
+                jugador.setPosicionInicial(savePoint.getxSalvada(),savePoint.getySalvada());
+                savePoint.setSalvado(true);
+                savePoint.changeImage();
+                checkPoint=true;
             }
         }
 

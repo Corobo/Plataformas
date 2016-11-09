@@ -25,17 +25,12 @@ public class Recolectable extends Modelo {
 
     private HashMap<String,Sprite> sprites = new HashMap<String,Sprite> ();
 
-    double xInicial;
-    double yInicial;
 
     int estado;
 
 
     public Recolectable(Context context, double xInicial, double yInicial) {
         super(context, xInicial,yInicial, 40, 40);
-
-        this.xInicial=xInicial;
-        this.yInicial=yInicial;
 
         inicializar();
     }
