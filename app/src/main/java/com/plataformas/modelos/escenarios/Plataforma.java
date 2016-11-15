@@ -15,20 +15,15 @@ import com.plataformas.modelos.Modelo;
 public class Plataforma extends Modelo {
 
     double velocidadX = 3;
-    public int tileXAnteriorIz = 0;
-    public int tileXAnteriorDe = 0;
-    public int tileXActualIz;
-    public int tileXActualDe;
+    public int tileAnterior = 0;
+    public int tileActual = 0;
 
     public Plataforma(Context context, double x, double y) {
         super(context, x, y, 32, 40);
 
         this.y = y -altura/2;
 
-        tileXActualIz =
-                (int) (x - (ancho / 2 - 1)) / Tile.ancho;
-        tileXActualDe =
-                (int) (x + (ancho / 2 - 1)) / Tile.ancho;
+        tileActual = (int) x / Tile.ancho;
 
         imagen = CargadorGraficos.cargarDrawable(context, R.drawable.platform);
     }

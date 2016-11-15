@@ -618,14 +618,11 @@ public class Nivel {
                     (int) plataforma.y / Tile.altura;
             int tileYPlataformaSuperior =
                     (int) (plataforma.y - (plataforma.altura / 2 - 1)) / Tile.altura;
-            plataforma.tileXAnteriorDe = plataforma.tileXActualDe ;
-            plataforma.tileXAnteriorIz = plataforma.tileXActualIz ;
-            plataforma.tileXActualDe = tileXPlataformaDerecha ;
-            plataforma.tileXActualIz = tileXPlataformaIzquierda ;
+            int tilePlataforma = (int) (plataforma.x) / Tile.ancho;
+
 
             if (plataforma.velocidadX > 0) {
                 //  Solo una condicion para pasar:  Tile delante libre, el de abajo solido
-                mapaTiles[plataforma.tileXAnteriorDe+1][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
                 if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1 &&
                         mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
                                 Tile.PASABLE &&
@@ -635,8 +632,10 @@ public class Nivel {
                                 Tile.PASABLE &&
                         mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
                                 Tile.PASABLE) {
-                    plataforma.x += plataforma.velocidadX;
                     mapaTiles[tileXPlataformaDerecha+1][tileYPlataformaCentro] = new Tile(null,Tile.SOLIDO);
+                    plataforma.x += plataforma.velocidadX;
+                    mapaTiles[tilePlataforma][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
+
 
                     // Enemigos voladores
                 }else if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1) {
@@ -659,7 +658,6 @@ public class Nivel {
 
             if (plataforma.velocidadX < 0) {
                 // Solo una condición para pasar: Tile izquierda pasable y suelo solido.
-                mapaTiles[plataforma.tileXAnteriorIz-1][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
                 if (tileXPlataformaIzquierda - 1 >= 0 &&
                         mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior].tipoDeColision ==
                                 Tile.PASABLE &&
@@ -669,9 +667,9 @@ public class Nivel {
                                 Tile.PASABLE &&
                         mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
                                 == Tile.PASABLE) {
-
-                    plataforma.x += plataforma.velocidadX;
                     mapaTiles[tileXPlataformaIzquierda-1][tileYPlataformaCentro] = new Tile(null,Tile.SOLIDO);
+                    plataforma.x += plataforma.velocidadX;
+                    mapaTiles[tilePlataforma][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
 
                 }else if (tileXPlataformaIzquierda - 1 >= 0) {
 
