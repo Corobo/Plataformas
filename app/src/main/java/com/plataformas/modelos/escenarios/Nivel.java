@@ -53,6 +53,7 @@ public class Nivel {
     private float velocidadMaximaCaida = 10;
 
     private List<Enemigo> enemigos;
+    private List<Plataforma> plataformas;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
@@ -80,6 +81,7 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         if(!checkPoint) {
+            plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
             savePoints = new ArrayList<>();
             scrollEjeX = 0;
@@ -154,6 +156,9 @@ public class Nivel {
             }
             for (SavePoint savePoint : savePoints){
                 savePoint.dibujar(canvas);
+            }
+            for (Plataforma plataforma : plataformas){
+                plataforma.dibujar(canvas);
             }
             meta.dibujar(canvas);
             for(int i=0; i < jugador.vidas; i++)
@@ -246,6 +251,12 @@ public class Nivel {
                 enemigos.add(new EnemigoBasico(context, xCentroAbajoTileE, yCentroAbajoTileE));
 
                 return new Tile(null, Tile.PASABLE);
+            case 'X':
+                int xCentroAbajoTileX = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileX = y * Tile.altura + Tile.altura;
+                plataformas.add(new Plataforma(context, xCentroAbajoTileX, yCentroAbajoTileX));
+
+                return new Tile(null, Tile.SOLIDO);
             case '1':
                 // Jugador
                 // Posicion centro abajo
@@ -589,6 +600,93 @@ public class Nivel {
                     }
                 } else {
                     enemigo.girar();
+                }
+            }
+
+        }
+
+        for (Iterator<Plataforma> iterator = plataformas.iterator(); iterator.hasNext();) {
+            Plataforma plataforma = iterator.next();
+
+            int tileXPlataformaIzquierda =
+                    (int) (plataforma.x - (plataforma.ancho / 2 - 1)) / Tile.ancho;
+            int tileXPlataformaDerecha =
+                    (int) (plataforma.x + (plataforma.ancho / 2 - 1)) / Tile.ancho;
+            int tileYPlataformaInferior =
+                    (int) (plataforma.y + (plataforma.altura / 2 - 1)) / Tile.altura;
+            int tileYPlataformaCentro =
+                    (int) plataforma.y / Tile.altura;
+            int tileYPlataformaSuperior =
+                    (int) (plataforma.y - (plataforma.altura / 2 - 1)) / Tile.altura;
+            plataforma.tileXAnteriorDe = plataforma.tileXActualDe ;
+            plataforma.tileXAnteriorIz = plataforma.tileXActualIz ;
+            plataforma.tileXActualDe = tileXPlataformaDerecha ;
+            plataforma.tileXActualIz = tileXPlataformaIzquierda ;
+
+            if (plataforma.velocidadX > 0) {
+                //  Solo una condicion para pasar:  Tile delante libre, el de abajo solido
+                mapaTiles[plataforma.tileXAnteriorDe+1][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
+                if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1 &&
+                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaCentro].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
+                                Tile.PASABLE) {
+                    plataforma.x += plataforma.velocidadX;
+                    mapaTiles[tileXPlataformaDerecha+1][tileYPlataformaCentro] = new Tile(null,Tile.SOLIDO);
+
+                    // Enemigos voladores
+                }else if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1) {
+
+                    int TileEnemigoDerecho = tileXPlataformaDerecha * Tile.ancho + Tile.ancho;
+                    double distanciaX = TileEnemigoDerecho - (plataforma.x + plataforma.ancho / 2);
+
+                    if (distanciaX > 0) {
+                        double velocidadNecesaria = Math.min(distanciaX, plataforma.velocidadX);
+                        plataforma.x += velocidadNecesaria;
+                    } else {
+                        plataforma.girar();
+                    }
+
+                    // No hay Tile, o es el final del mapa
+                } else {
+                    plataforma.girar();
+                }
+            }
+
+            if (plataforma.velocidadX < 0) {
+                // Solo una condición para pasar: Tile izquierda pasable y suelo solido.
+                mapaTiles[plataforma.tileXAnteriorIz-1][tileYPlataformaCentro] = new Tile(null,Tile.PASABLE);
+                if (tileXPlataformaIzquierda - 1 >= 0 &&
+                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaCentro].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
+                                == Tile.PASABLE) {
+
+                    plataforma.x += plataforma.velocidadX;
+                    mapaTiles[tileXPlataformaIzquierda-1][tileYPlataformaCentro] = new Tile(null,Tile.SOLIDO);
+
+                }else if (tileXPlataformaIzquierda - 1 >= 0) {
+
+                    int TileEnemigoIzquierdo = tileXPlataformaIzquierda * Tile.ancho;
+                    double distanciaX = (plataforma.x - plataforma.ancho / 2) - TileEnemigoIzquierdo;
+
+                    if (distanciaX > 0) {
+                        double velocidadNecesaria =
+                                Utilidades.proximoACero(-distanciaX, plataforma.velocidadX);
+                        plataforma.x += velocidadNecesaria;
+                    } else {
+                        plataforma.girar();
+                    }
+                } else {
+                    plataforma.girar();
                 }
             }
 
