@@ -7,6 +7,7 @@ import com.plataformas.R;
 import com.plataformas.gestores.CargadorGraficos;
 import com.plataformas.modelos.Modelo;
 import com.plataformas.modelos.escenarios.Nivel;
+import com.plataformas.modelos.escenarios.Tile;
 
 /**
  * Created by uo227602 on 09/11/2016.
@@ -25,7 +26,7 @@ public class SavePoint extends Modelo {
             this.y =  y - altura/2;;
 
             xSalvada = x;
-            ySalvada = y;
+            ySalvada = y-Tile.altura;
 
             imagen = CargadorGraficos.cargarDrawable(context, R.drawable.flagyellow_down);
     }

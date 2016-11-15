@@ -79,33 +79,33 @@ public class Nivel {
     }
 
     public void inicializar() throws Exception {
+        if(!checkPoint) {
+            recolectables = new ArrayList<>();
+            savePoints = new ArrayList<>();
+            scrollEjeX = 0;
+            scrollEjeY = 0;
+            mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
+            nivelPausado = true;
+            GameView.contador.reiniciarPuntuacion();
+            enemigos = new LinkedList<Enemigo>();
+            disparosJugador = new LinkedList<Disparo>();
+            disparosEnemigos = new LinkedList<Disparo>();
+            fondos = new Fondo[2];
+            fondos[0] = new Fondo(context, CargadorGraficos.cargarBitmap(context,
+                    R.drawable.capa1), 0);
+            fondos[1] = new Fondo(context, CargadorGraficos.cargarBitmap(context,
+                    R.drawable.capa2), 1f);
+            iconosVida = new IconoVida[3];
 
-        recolectables = new ArrayList<>();
-
-        savePoints = new ArrayList<>();
-        scrollEjeX = 0;
-        scrollEjeY = 0;
-        mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
-        nivelPausado = true;
-        GameView.contador.reiniciarPuntuacion();
-        enemigos = new LinkedList<Enemigo>();
-        disparosJugador = new LinkedList<Disparo>();
-        disparosEnemigos = new LinkedList<Disparo>();
-        fondos = new Fondo[2];
-        fondos[0] = new Fondo(context,CargadorGraficos.cargarBitmap(context,
-                R.drawable.capa1), 0);
-        fondos[1] = new Fondo(context,CargadorGraficos.cargarBitmap(context,
-                R.drawable.capa2), 1f);
-        iconosVida = new IconoVida[3];
-
-        iconosVida[0] = new IconoVida(context, GameView.pantallaAncho*0.05,
-                GameView.pantallaAlto*0.1);
-        iconosVida[1] = new IconoVida(context, GameView.pantallaAncho*0.15,
-                GameView.pantallaAlto*0.1);
-        iconosVida[2] = new IconoVida(context, GameView.pantallaAncho*0.25,
-                GameView.pantallaAlto*0.1);
-        inicializarMapaTiles();
-        scrollEjeY = (int) (altoMapaTiles() - tilesEnDistanciaY(GameView.pantallaAlto))*Tile.altura;
+            iconosVida[0] = new IconoVida(context, GameView.pantallaAncho * 0.05,
+                    GameView.pantallaAlto * 0.1);
+            iconosVida[1] = new IconoVida(context, GameView.pantallaAncho * 0.15,
+                    GameView.pantallaAlto * 0.1);
+            iconosVida[2] = new IconoVida(context, GameView.pantallaAncho * 0.25,
+                    GameView.pantallaAlto * 0.1);
+            inicializarMapaTiles();
+            scrollEjeY = (int) (altoMapaTiles() - tilesEnDistanciaY(GameView.pantallaAlto)) * Tile.altura;
+        }
     }
 
 
