@@ -699,6 +699,14 @@ public class Nivel {
                     }
                 }
             }
+            if(jugador.colisiona(plataforma)){
+                jugador.x+=plataforma.velocidadX;
+            }
+            for(Enemigo enemigo:enemigos){
+                if(enemigo.colisiona(plataforma)){
+                    enemigo.x+=plataforma.velocidadX;
+                }
+            }
         }
 
         for (Iterator<Disparo> iterator = disparosEnemigos.iterator(); iterator.hasNext(); ) {
