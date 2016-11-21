@@ -15,7 +15,6 @@ import com.plataformas.modelos.Modelo;
 public class Plataforma extends Modelo {
 
     double velocidadX = 3;
-    public int tileAnterior;
 
     public Plataforma(Context context, double x, double y) {
         super(context, x, y, 32, 40);
