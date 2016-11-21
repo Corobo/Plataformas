@@ -24,10 +24,6 @@ public class Caja extends Modelo {
         imagen = CargadorGraficos.cargarDrawable(context, R.drawable.platform);
     }
 
-    public boolean girar(){
-        velocidadX = velocidadX*-1;
-        return true;
-    }
 
     public void dibujar(Canvas canvas){
         int yArriva = (int)  y - altura/2  - Nivel.scrollEjeY;

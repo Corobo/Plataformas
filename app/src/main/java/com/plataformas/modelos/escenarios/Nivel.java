@@ -54,6 +54,7 @@ public class Nivel {
 
     private List<Enemigo> enemigos;
     private List<Plataforma> plataformas;
+    private List<Caja> cajas;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
