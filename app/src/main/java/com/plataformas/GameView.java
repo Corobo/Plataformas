@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.plataformas.gestores.GestorAudio;
 import com.plataformas.modelos.escenarios.Nivel;
 import com.plataformas.modelos.controles.BotonDisparar;
 import com.plataformas.modelos.controles.BotonSaltar;
@@ -32,6 +33,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
     public static Contador contador;
 
     private BotonDisparar botonDisparar;
+    private GestorAudio gestorAudio;
 
 
 
@@ -43,6 +45,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         setFocusable(true);
 
         this.context = context;
+        inicializarGestorAudio(context);
         gameloop = new GameLoop(this);
         gameloop.setRunning(true);
     }
@@ -109,6 +112,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
                 if (botonDisparar.estaPulsado(x[i], y[i])) {
                     if (accion[i] == ACTION_DOWN) {
                         nivel.botonDispararPulsado = true;
+                        gestorAudio.reproducirSonido(GestorAudio.SONIDO_DISPARO_JUGADOR);
                     }
                 }
 
@@ -143,6 +147,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         botonDisparar = new BotonDisparar(context);
         nivel = new Nivel(context,numeroNivel);
         nivel.gameView = this;
+    }
+
+    public void inicializarGestorAudio(Context context) {
+        gestorAudio = GestorAudio.getInstancia(context, R.raw.musica_fondo);
+        gestorAudio.reproducirMusicaAmbiente();
+        gestorAudio.registrarSonido(GestorAudio.SONIDO_DISPARO_JUGADOR,
+                R.raw.lanzar_objeto);
     }
 
     public void actualizar(long tiempo) throws Exception {

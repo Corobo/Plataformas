@@ -10,6 +10,7 @@ import android.util.Log;
 import com.plataformas.GameView;
 import com.plataformas.R;
 import com.plataformas.gestores.CargadorGraficos;
+import com.plataformas.gestores.GestorAudio;
 import com.plataformas.gestores.Utilidades;
 import com.plataformas.global.Estado;
 import com.plataformas.modelos.controles.IconoVida;
