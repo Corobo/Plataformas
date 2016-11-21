@@ -623,25 +623,16 @@ public class Nivel {
                 plataforma.x += plataforma.velocidadX;
             } else {
                 if (plataforma.velocidadX > 0) {
-                    //  Solo una condicion para pasar:  Tile delante libre, el de abajo solido
                     if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1 &&
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE) /*&&
-                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaSuperior].tipoDeColision ==
-                                Tile.PASABLE && (
-                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
-                                Tile.PASABLE ||  mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
-                                Tile.SOLIDO))*/ {
+                                    Tile.PASABLE){
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaDerecha][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
                         if (!giradoPlataforma)
                             mapaTiles[tileXPlataformaDerecha - 1][tileYPlataformaCentro] = new Tile(null, Tile.PASABLE);
-
-
-                        // Enemigos voladores
                     } else if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1) {
                         int TileEnemigoDerecho = tileXPlataformaDerecha * Tile.ancho + Tile.ancho;
                         double distanciaX = TileEnemigoDerecho - (plataforma.x + plataforma.ancho / 2);
@@ -653,8 +644,6 @@ public class Nivel {
                             mapaTiles[tileXPlataformaDerecha - 1][tileYPlataformaCentro] = new Tile(null, Tile.PASABLE);
                             giradoPlataforma = plataforma.girar();
                         }
-
-                        // No hay Tile, o es el final del mapa
                     } else {
                         plataforma.girar();
                     }
@@ -665,28 +654,20 @@ public class Nivel {
                 plataforma.x += plataforma.velocidadX;
             } else {
                 if (plataforma.velocidadX < 0) {
-                    // Solo una condición para pasar: Tile izquierda pasable y suelo solido.
                     if (tileXPlataformaIzquierda - 1 >= 0 &&
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE)/*  &&
-                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaSuperior].tipoDeColision ==
-                                Tile.PASABLE && (
-                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
-                                == Tile.PASABLE) || mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
-                        == Tile.SOLIDO)*/ {
+                                    Tile.PASABLE){
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaIzquierda][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
                         if (!giradoPlataforma)
                             mapaTiles[tileXPlataformaIzquierda + 1][tileYPlataformaCentro] = new Tile(null, Tile.PASABLE);
-
                     } else if (tileXPlataformaIzquierda - 1 >= 0) {
                         giradoPlataforma = false;
                         int TileEnemigoIzquierdo = tileXPlataformaIzquierda * Tile.ancho;
                         double distanciaX = (plataforma.x - plataforma.ancho / 2) - TileEnemigoIzquierdo;
-
                         if (distanciaX > 0) {
                             double velocidadNecesaria =
                                     Utilidades.proximoACero(-distanciaX, plataforma.velocidadX);
