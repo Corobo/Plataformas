@@ -83,6 +83,7 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         if (!checkPoint) {
+            cajas = new ArrayList<>();
             plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
             savePoints = new ArrayList<>();
@@ -162,6 +163,9 @@ public class Nivel {
             for (Plataforma plataforma : plataformas) {
                 plataforma.dibujar(canvas);
             }
+            for (Caja caja : cajas) {
+                caja.dibujar(canvas);
+            }
             meta.dibujar(canvas);
             for (int i = 0; i < jugador.vidas; i++)
                 iconosVida[i].dibujar(canvas);
@@ -187,7 +191,6 @@ public class Nivel {
     }
 
     public int altoMapaTiles() {
-
         return mapaTiles[0].length;
     }
 
@@ -259,6 +262,12 @@ public class Nivel {
                 plataformas.add(new Plataforma(context, xCentroAbajoTileX, yCentroAbajoTileX));
 
                 return new Tile(null, Tile.PASABLE);
+            case 'Q':
+                int xCentroAbajoTileQ = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileQ = y * Tile.altura + Tile.altura;
+                cajas.add(new Caja(context, xCentroAbajoTileQ, yCentroAbajoTileQ));
+
+                return new Tile(null, Tile.SOLIDO);
             case '1':
                 // Jugador
                 // Posicion centro abajo
@@ -361,7 +370,6 @@ public class Nivel {
             }
         }
     }
-
 
     private void aplicarReglasMovimiento() throws Exception {
 
@@ -627,7 +635,7 @@ public class Nivel {
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE){
+                                    Tile.PASABLE) {
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaDerecha][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
@@ -658,7 +666,7 @@ public class Nivel {
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE){
+                                    Tile.PASABLE) {
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaIzquierda][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
@@ -681,17 +689,74 @@ public class Nivel {
                     }
                 }
             }
-            if(jugador.colisiona(plataforma)){
-                jugador.x+=plataforma.velocidadX;
+            if (jugador.colisiona(plataforma)) {
+                jugador.x += plataforma.velocidadX;
             }
-            for(Enemigo enemigo:enemigos){
-                if(enemigo.colisiona(plataforma)){
-                    enemigo.x+=plataforma.velocidadX;
+            for (Enemigo enemigo : enemigos) {
+                if (enemigo.colisiona(plataforma)) {
+                    enemigo.x += plataforma.velocidadX;
                 }
             }
         }
 
-        for (Iterator<Disparo> iterator = disparosEnemigos.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Caja> iterator = cajas.iterator(); iterator.hasNext(); ) {
+            Caja caja = iterator.next();
+
+            int tileXCajaIzquierda =
+                    (int) (caja.x - (caja.ancho / 2 - 1)) / Tile.ancho;
+            int tileXCajaDerecha =
+                    (int) (caja.x + (caja.ancho / 2 - 1)) / Tile.ancho;
+            int tileYCajaInferior =
+                    (int) (caja.y + (caja.altura / 2 - 1)) / Tile.altura;
+            int tileYCajaCentro =
+                    (int) caja.y / Tile.altura;
+                if (jugador.colisiona(caja) && tileXCajaDerecha + 1 <= anchoMapaTiles() - 1 &&
+                        mapaTiles[tileXCajaDerecha + 1][tileYCajaInferior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXCajaDerecha + 1][tileYCajaCentro].tipoDeColision ==
+                                Tile.PASABLE) {
+                    caja.x += caja.velocidadX;
+                    mapaTiles[tileXCajaDerecha][tileYCajaCentro] = new Tile(null, Tile.SOLIDO);
+                    mapaTiles[tileXCajaDerecha - 1][tileYCajaCentro] = new Tile(null, Tile.PASABLE);
+                } else if (tileXCajaDerecha + 1 <= anchoMapaTiles() - 1) {
+                    int TileDerecha = tileXCajaDerecha * Tile.ancho + Tile.ancho;
+                    double distanciaX = TileDerecha - (caja.x + caja.ancho / 2);
+
+                    if (distanciaX > 0) {
+                        double velocidadNecesaria = Math.min(distanciaX, caja.velocidadX);
+                        caja.x += velocidadNecesaria;
+                    } else {
+                        mapaTiles[tileXCajaDerecha - 1][tileYCajaCentro] = new Tile(null, Tile.PASABLE);
+                    }
+                }
+                if (jugador.colisiona(caja) && tileXCajaIzquierda - 1 >= 0 &&
+                            mapaTiles[tileXCajaIzquierda - 1][tileYCajaInferior].tipoDeColision ==
+                                    Tile.PASABLE &&
+                            mapaTiles[tileXCajaIzquierda - 1][tileYCajaCentro].tipoDeColision ==
+                                    Tile.PASABLE) {
+                        caja.x += caja.velocidadX;
+                        mapaTiles[tileXCajaIzquierda][tileYCajaCentro] = new Tile(null, Tile.SOLIDO);
+                        mapaTiles[tileXCajaIzquierda + 1][tileYCajaCentro] = new Tile(null, Tile.PASABLE);
+                    } else if (tileXCajaIzquierda - 1 >= 0) {
+                    giradoPlataforma = false;
+                    int TileIzquierda = tileXCajaIzquierda * Tile.ancho;
+                    double distanciaX = (caja.x - caja.ancho / 2) - TileIzquierda;
+                    if (distanciaX > 0) {
+                        double velocidadNecesaria =
+                                Utilidades.proximoACero(-distanciaX, caja.velocidadX);
+                        caja.x += velocidadNecesaria;
+                    } else {
+                        mapaTiles[tileXCajaIzquierda + 1][tileYCajaCentro] = new Tile(null, Tile.PASABLE);
+                    }
+                }
+
+        }
+
+        for (
+                Iterator<Disparo> iterator = disparosEnemigos.iterator();
+                iterator.hasNext(); )
+
+        {
             DisparoEnemigo disparoEnemigo = (DisparoEnemigo) iterator.next();
 
             int tileXDisparo = (int) disparoEnemigo.x / Tile.ancho;
@@ -769,7 +834,9 @@ public class Nivel {
             }
         }
         // Gravedad Jugador
-        if (jugador.enElAire) {
+        if (jugador.enElAire)
+
+        {
             // Recordar los ejes:
             // - es para arriba       + es para abajo.
             jugador.setVelocidadY(jugador.getVelocidadY() + velocidadGravedad);
@@ -778,7 +845,11 @@ public class Nivel {
             }
         }
 
-        for (Iterator<SavePoint> iterator = savePoints.iterator(); iterator.hasNext(); ) {
+        for (
+                Iterator<SavePoint> iterator = savePoints.iterator();
+                iterator.hasNext(); )
+
+        {
             SavePoint savePoint = iterator.next();
             if (jugador.colisiona(savePoint) && !savePoint.getSalvado()) {
                 jugador.setPosicionInicial(savePoint.getxSalvada(), savePoint.getySalvada());
@@ -789,7 +860,9 @@ public class Nivel {
         }
 
         // derecha o parado
-        if (jugador.getVelocidadX() > 0) {
+        if (jugador.getVelocidadX() > 0)
+
+        {
             // Tengo un tile delante y es PASABLE
             // El tile de delante está dentro del Nivel
             if (tileXJugadorDerecha + 1 <= anchoMapaTiles() - 1 &&
@@ -835,7 +908,9 @@ public class Nivel {
         }
 
         // izquierda
-        if (jugador.getVelocidadX() <= 0) {
+        if (jugador.getVelocidadX() <= 0)
+
+        {
             // Tengo un tile detrás y es PASABLE
             // El tile de delante está dentro del Nivel
             if (tileXJugadorIzquierda - 1 >= 0 &&
@@ -879,7 +954,9 @@ public class Nivel {
             }
         }
         // Hacia arriba
-        if (jugador.getVelocidadY() < 0) {
+        if (jugador.getVelocidadY() < 0)
+
+        {
             // Tile superior PASABLE
             // Podemos seguir moviendo hacia arriba
             if (tileYJugadorSuperior - 1 >= 0 &&
@@ -912,7 +989,9 @@ public class Nivel {
         }
 
         // Hacia abajo
-        if (jugador.getVelocidadY() >= 0) {
+        if (jugador.getVelocidadY() >= 0)
+
+        {
             // Tile inferior PASABLE
             // Podemos seguir moviendo hacia abajo
             // NOTA - El ultimo tile es especial (caer al vacío )
@@ -969,7 +1048,10 @@ public class Nivel {
 
             }
         }
-        if (jugador.colisiona(meta)) {
+
+        if (jugador.colisiona(meta))
+
+        {
             gameView.nivelCompleto();
         }
 

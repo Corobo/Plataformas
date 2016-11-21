@@ -21,7 +21,7 @@ public class Caja extends Modelo {
         this.y = y -altura/2;
 
 
-        imagen = CargadorGraficos.cargarDrawable(context, R.drawable.platform);
+        imagen = CargadorGraficos.cargarDrawable(context, R.drawable.tierra_dos);
     }
 
 
