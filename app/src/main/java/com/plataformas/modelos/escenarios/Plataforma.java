@@ -15,25 +15,24 @@ import com.plataformas.modelos.Modelo;
 public class Plataforma extends Modelo {
 
     double velocidadX = 3;
-    public int tileAnterior = 0;
-    public int tileActual = 0;
+    public int tileAnterior;
 
     public Plataforma(Context context, double x, double y) {
         super(context, x, y, 32, 40);
 
         this.y = y -altura/2;
 
-        tileActual = (int) x / Tile.ancho;
 
         imagen = CargadorGraficos.cargarDrawable(context, R.drawable.platform);
     }
 
-    public void girar(){
+    public boolean girar(){
         velocidadX = velocidadX*-1;
+        return true;
     }
 
     public void dibujar(Canvas canvas){
-        int yArriva = (int)  y - altura  - Nivel.scrollEjeY;
+        int yArriva = (int)  y - altura/2  - Nivel.scrollEjeY;
         int xIzquierda = (int) x - ancho/2 - Nivel.scrollEjeX;
 
         imagen.setBounds(xIzquierda, yArriva, xIzquierda
