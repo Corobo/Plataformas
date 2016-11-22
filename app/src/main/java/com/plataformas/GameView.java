@@ -25,7 +25,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
     public static int pantallaAncho;
     public static int pantallaAlto;
 
-    private Nivel nivel;
+    protected static Nivel nivel;
     public int numeroNivel = 0;
 
     private Pad pad;
@@ -33,7 +33,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
     public static Contador contador;
 
     private BotonDisparar botonDisparar;
-    private GestorAudio gestorAudio;
+    public GestorAudio gestorAudio;
+
+    public boolean pausa=false;
 
 
 
@@ -112,7 +114,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
                 if (botonDisparar.estaPulsado(x[i], y[i])) {
                     if (accion[i] == ACTION_DOWN) {
                         nivel.botonDispararPulsado = true;
-                        gestorAudio.reproducirSonido(GestorAudio.SONIDO_DISPARO_JUGADOR);
                     }
                 }
 
@@ -154,6 +155,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         gestorAudio.reproducirMusicaAmbiente();
         gestorAudio.registrarSonido(GestorAudio.SONIDO_DISPARO_JUGADOR,
                 R.raw.lanzar_objeto);
+        gestorAudio.registrarSonido(GestorAudio.SONIDO_SALTO_JUGADOR,R.raw.salto_jugador);
+        gestorAudio.registrarSonido(GestorAudio.SONIDO_ENEMIGO_GOLPEADO,R.raw.disparo_golpea);
+        gestorAudio.registrarSonido(GestorAudio.SONIDO_JUGADOR_GOLPEADO,R.raw.jugador_golpeado);
     }
 
     public void actualizar(long tiempo) throws Exception {

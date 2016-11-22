@@ -38,7 +38,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if(v==nuevoJuego){
             Intent actividadJuego = new Intent(MenuActivity.this,
-                    SeleccionModoActivity.class);
+                    SeleccionModo.class);
             startActivity(actividadJuego);
             finish();
         }

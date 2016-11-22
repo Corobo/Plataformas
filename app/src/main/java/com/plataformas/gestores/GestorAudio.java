@@ -13,6 +13,9 @@ import java.util.HashMap;
 
 public class GestorAudio implements MediaPlayer.OnPreparedListener {
     public static final int SONIDO_DISPARO_JUGADOR = 1;
+    public static final int SONIDO_SALTO_JUGADOR = 2;
+    public static final int SONIDO_ENEMIGO_GOLPEADO = 3;
+    public static final int SONIDO_JUGADOR_GOLPEADO = 4;
     // Pool de sonidos, para efectos de sonido.
     // Suele fallar el utilizar ficheros de sonido demasiado grandes
     private SoundPool poolSonidos;

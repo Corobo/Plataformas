@@ -125,9 +125,12 @@ public class Nivel {
                 disparoJugador.actualizar(tiempo);
             }
             jugador.procesarOrdenes(orientacionPad, botonSaltarPulsado, botonDispararPulsado);
-            if (botonSaltarPulsado)
+            if (botonSaltarPulsado) {
+                gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_SALTO_JUGADOR);
                 botonSaltarPulsado = false;
+            }
             if (botonDispararPulsado) {
+                gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_DISPARO_JUGADOR);
                 disparosJugador.add(new DisparoJugador(context, jugador.x, jugador.y, jugador.orientacion));
                 botonDispararPulsado = false;
             }
@@ -448,6 +451,7 @@ public class Nivel {
             }
             for (Enemigo enemigo : enemigos) {
                 if (disparoJugador.colisiona(enemigo)) {
+                    gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_ENEMIGO_GOLPEADO);
                     enemigo.destruir();
                     iterator.remove();
                     break;
@@ -494,6 +498,7 @@ public class Nivel {
                     tileXJugadorIzquierda + rango > tileXEnemigoIzquierda) {
 
                 if (jugador.colisiona(enemigo)) {
+                    gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_JUGADOR_GOLPEADO);
                     if (jugador.golpeado() <= 0) {
                         nivelPausado = true;
                         mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);
@@ -778,6 +783,7 @@ public class Nivel {
                 }
             }
             if (disparoEnemigo.colisiona(jugador)) {
+                gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_JUGADOR_GOLPEADO);
                 if (jugador.golpeado() <= 0) {
                     nivelPausado = true;
                     mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.you_lose);

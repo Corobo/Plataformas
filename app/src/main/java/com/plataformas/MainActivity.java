@@ -6,6 +6,8 @@ import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.plataformas.gestores.GestorAudio;
+
 public class MainActivity extends Activity {
     GameView gameView = null;
 
@@ -38,5 +40,22 @@ public class MainActivity extends Activity {
             gameView.gameloop.setRunning(false);
             gameView = null;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (GestorAudio.getInstancia() != null){
+            GestorAudio.getInstancia().pararMusicaAmbiente();
+        }
+        GameView.nivel.nivelPausado=true;
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (GestorAudio.getInstancia() != null){
+            GestorAudio.getInstancia().reproducirMusicaAmbiente();
+        }
+        super.onResume();
     }
 }
