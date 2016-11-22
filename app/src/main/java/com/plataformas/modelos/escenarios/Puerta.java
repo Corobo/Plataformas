@@ -8,7 +8,7 @@ import com.plataformas.gestores.CargadorGraficos;
 import com.plataformas.modelos.Modelo;
 
 /**
- * Created by Becario on 22/11/2016.
+ * Created by uo227602 on 22/11/2016.
  */
 
 public class Puerta extends Modelo {

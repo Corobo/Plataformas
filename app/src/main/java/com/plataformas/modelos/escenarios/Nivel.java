@@ -72,6 +72,7 @@ public class Nivel {
     public boolean checkPoint;
     public boolean giradoPlataforma = false;
     public boolean entraPuerta;
+    public long tiempoEspera;
 
     public Nivel(Context context, int numeroNivel) throws Exception {
         inicializado = false;
@@ -746,14 +747,18 @@ public class Nivel {
         for(Puerta puerta:puertas){
             for(Puerta puerta2:puertas){
                 if(puerta!=puerta2){
-                    if(puerta.numero==puerta2.numero && entraPuerta){
-                        if(jugador.colisiona(puerta)){
+                    if(puerta.numero==puerta2.numero){
+                        if(jugador.colisiona(puerta) && entraPuerta && System.currentTimeMillis()-tiempoEspera >=2000){
                             jugador.x = puerta2.getX();
                             jugador.y = puerta2.getY()-Tile.altura;
+                            entraPuerta=false;
+                            tiempoEspera = System.currentTimeMillis();
                         }
-                        else if(jugador.colisiona(puerta2) && entraPuerta){
+                        else if(jugador.colisiona(puerta2) && entraPuerta && System.currentTimeMillis()-tiempoEspera >=2000){
                             jugador.x = puerta.getX();
                             jugador.y = puerta.getY()-Tile.altura;
+                            entraPuerta=false;
+                            tiempoEspera = System.currentTimeMillis();
                         }
                     }
                 }
