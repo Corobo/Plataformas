@@ -55,6 +55,7 @@ public class Nivel {
 
     private List<Enemigo> enemigos;
     private List<Plataforma> plataformas;
+    private List<Puerta> puertas;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
@@ -70,6 +71,7 @@ public class Nivel {
     public boolean nivelPausado;
     public boolean checkPoint;
     public boolean giradoPlataforma = false;
+    public boolean entraPuerta;
 
     public Nivel(Context context, int numeroNivel) throws Exception {
         inicializado = false;
@@ -83,9 +85,11 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         if (!checkPoint) {
+            entraPuerta=false;
             plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
             savePoints = new ArrayList<>();
+            puertas = new ArrayList<>();
             scrollEjeX = 0;
             scrollEjeY = 0;
             mensaje = CargadorGraficos.cargarBitmap(context, R.drawable.description);
@@ -155,7 +159,6 @@ public class Nivel {
             for (Disparo disparoEnemigo : disparosEnemigos) {
                 disparoEnemigo.dibujar(canvas);
             }
-            jugador.dibujar(canvas);
             for (Enemigo enemigo : enemigos) {
                 enemigo.dibujar(canvas);
             }
@@ -165,6 +168,11 @@ public class Nivel {
             for (Plataforma plataforma : plataformas) {
                 plataforma.dibujar(canvas);
             }
+            for (Puerta puerta: puertas){
+                puerta.dibujar(canvas);
+            }
+            jugador.dibujar(canvas);
+
             meta.dibujar(canvas);
             for (int i = 0; i < jugador.vidas; i++)
                 iconosVida[i].dibujar(canvas);
@@ -260,6 +268,36 @@ public class Nivel {
                 int xCentroAbajoTileX = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileX = y * Tile.altura + Tile.altura;
                 plataformas.add(new Plataforma(context, xCentroAbajoTileX, yCentroAbajoTileX));
+
+                return new Tile(null, Tile.PASABLE);
+            case '9':
+                int xCentroAbajoTileP9 = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileP9 = y * Tile.altura + Tile.altura;
+                puertas.add(new Puerta(context, xCentroAbajoTileP9, yCentroAbajoTileP9,9));
+
+                return new Tile(null, Tile.PASABLE);
+            case '8':
+                int xCentroAbajoTileP8 = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileP8 = y * Tile.altura + Tile.altura;
+                puertas.add(new Puerta(context, xCentroAbajoTileP8, yCentroAbajoTileP8,8));
+
+                return new Tile(null, Tile.PASABLE);
+            case '7':
+                int xCentroAbajoTileP7 = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileP7 = y * Tile.altura + Tile.altura;
+                puertas.add(new Puerta(context, xCentroAbajoTileP7, yCentroAbajoTileP7,7));
+
+                return new Tile(null, Tile.PASABLE);
+            case '5':
+                int xCentroAbajoTileP5 = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileP5 = y * Tile.altura + Tile.altura;
+                puertas.add(new Puerta(context, xCentroAbajoTileP5, yCentroAbajoTileP5,5));
+
+                return new Tile(null, Tile.PASABLE);
+            case '4':
+                int xCentroAbajoTileP4 = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileP4 = y * Tile.altura + Tile.altura;
+                puertas.add(new Puerta(context, xCentroAbajoTileP4, yCentroAbajoTileP4,4));
 
                 return new Tile(null, Tile.PASABLE);
             case '1':
@@ -633,12 +671,7 @@ public class Nivel {
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE) /*&&
-                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaSuperior].tipoDeColision ==
-                                Tile.PASABLE && (
-                        mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
-                                Tile.PASABLE ||  mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior + 1].tipoDeColision ==
-                                Tile.SOLIDO))*/ {
+                                    Tile.PASABLE)  {
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaDerecha][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
@@ -675,12 +708,7 @@ public class Nivel {
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE)/*  &&
-                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaSuperior].tipoDeColision ==
-                                Tile.PASABLE && (
-                        mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
-                                == Tile.PASABLE) || mapaTiles[tileXPlataformaIzquierda - 1][tileYPlataformaInferior + 1].tipoDeColision
-                        == Tile.SOLIDO)*/ {
+                                    Tile.PASABLE) {
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaIzquierda][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
@@ -711,6 +739,23 @@ public class Nivel {
             for(Enemigo enemigo:enemigos){
                 if(enemigo.colisiona(plataforma)){
                     enemigo.x+=plataforma.velocidadX;
+                }
+            }
+        }
+
+        for(Puerta puerta:puertas){
+            for(Puerta puerta2:puertas){
+                if(puerta!=puerta2){
+                    if(puerta.numero==puerta2.numero && entraPuerta){
+                        if(jugador.colisiona(puerta)){
+                            jugador.x = puerta2.getX();
+                            jugador.y = puerta2.getY()-Tile.altura;
+                        }
+                        else if(jugador.colisiona(puerta2) && entraPuerta){
+                            jugador.x = puerta.getX();
+                            jugador.y = puerta.getY()-Tile.altura;
+                        }
+                    }
                 }
             }
         }

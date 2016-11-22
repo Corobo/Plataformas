@@ -32,9 +32,13 @@ public class Pad extends Modelo {
         return estaPulsado;
     }
 
-    public int getOrientacionX(
-            float cliclX) {
-        return (int) (x - cliclX);
+    public int getOrientacionX(float cliclX) {
+        int xPulsado = (int) (x - cliclX);
+        return xPulsado>15 || xPulsado<-15 ? xPulsado : 0;
+    }
+    public int getOrientacionY(float clicY){
+        int yPulsado = (int) (y - clicY);
+        return yPulsado>15 || yPulsado<-15 ? yPulsado : 0;
     }
 
 }

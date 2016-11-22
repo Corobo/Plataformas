@@ -127,11 +127,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
                 if (pad.estaPulsado(x[i], y[i])) {
 
                     float orientacion = pad.getOrientacionX(x[i]);
-
+                    float orientacionY = pad.getOrientacionY(y[i]);
                     // Si almenosuna pulsacion está en el pad
                     if (accion[i] != ACTION_UP) {
-                        pulsacionPadMover = true;
-                        nivel.orientacionPad = orientacion;
+                        if(orientacion!=0) {
+                            pulsacionPadMover = true;
+                            nivel.orientacionPad = orientacion;
+                        }
+                        else if(orientacionY!=0){
+                            pulsacionPadMover=false;
+                            nivel.entraPuerta=true;
+                        }
                     }
                 }
             }
