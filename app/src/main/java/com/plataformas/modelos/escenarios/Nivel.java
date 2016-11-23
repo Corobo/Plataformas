@@ -74,7 +74,7 @@ public class Nivel {
     public boolean giradoPlataforma = false;
     public boolean entraPuerta;
     public long tiempoEspera;
-    public boolean encimaCaja=false;
+    public boolean encimaCaja = false;
 
     public Nivel(Context context, int numeroNivel) throws Exception {
         inicializado = false;
@@ -88,7 +88,7 @@ public class Nivel {
 
     public void inicializar() throws Exception {
         if (!checkPoint) {
-            entraPuerta=false;
+            entraPuerta = false;
             cajas = new ArrayList<>();
             plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
@@ -172,10 +172,10 @@ public class Nivel {
             for (Plataforma plataforma : plataformas) {
                 plataforma.dibujar(canvas);
             }
-            for (Puerta puerta: puertas){
+            for (Puerta puerta : puertas) {
                 puerta.dibujar(canvas);
             }
-            for (Caja caja: cajas){
+            for (Caja caja : cajas) {
                 caja.dibujar(canvas);
             }
             jugador.dibujar(canvas);
@@ -286,31 +286,31 @@ public class Nivel {
             case '9':
                 int xCentroAbajoTileP9 = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileP9 = y * Tile.altura + Tile.altura;
-                puertas.add(new Puerta(context, xCentroAbajoTileP9, yCentroAbajoTileP9,9));
+                puertas.add(new Puerta(context, xCentroAbajoTileP9, yCentroAbajoTileP9, 9));
 
                 return new Tile(null, Tile.PASABLE);
             case '8':
                 int xCentroAbajoTileP8 = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileP8 = y * Tile.altura + Tile.altura;
-                puertas.add(new Puerta(context, xCentroAbajoTileP8, yCentroAbajoTileP8,8));
+                puertas.add(new Puerta(context, xCentroAbajoTileP8, yCentroAbajoTileP8, 8));
 
                 return new Tile(null, Tile.PASABLE);
             case '7':
                 int xCentroAbajoTileP7 = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileP7 = y * Tile.altura + Tile.altura;
-                puertas.add(new Puerta(context, xCentroAbajoTileP7, yCentroAbajoTileP7,7));
+                puertas.add(new Puerta(context, xCentroAbajoTileP7, yCentroAbajoTileP7, 7));
 
                 return new Tile(null, Tile.PASABLE);
             case '5':
                 int xCentroAbajoTileP5 = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileP5 = y * Tile.altura + Tile.altura;
-                puertas.add(new Puerta(context, xCentroAbajoTileP5, yCentroAbajoTileP5,5));
+                puertas.add(new Puerta(context, xCentroAbajoTileP5, yCentroAbajoTileP5, 5));
 
                 return new Tile(null, Tile.PASABLE);
             case '4':
                 int xCentroAbajoTileP4 = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileP4 = y * Tile.altura + Tile.altura;
-                puertas.add(new Puerta(context, xCentroAbajoTileP4, yCentroAbajoTileP4,4));
+                puertas.add(new Puerta(context, xCentroAbajoTileP4, yCentroAbajoTileP4, 4));
 
                 return new Tile(null, Tile.PASABLE);
             case '1':
@@ -684,7 +684,7 @@ public class Nivel {
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaInferior].tipoDeColision ==
                                     Tile.PASABLE &&
                             mapaTiles[tileXPlataformaDerecha + 1][tileYPlataformaCentro].tipoDeColision ==
-                                    Tile.PASABLE)  {
+                                    Tile.PASABLE) {
 
                         plataforma.x += plataforma.velocidadX;
                         mapaTiles[tileXPlataformaDerecha][tileYPlataformaCentro] = new Tile(null, Tile.SOLIDO);
@@ -694,8 +694,8 @@ public class Nivel {
 
                         // Enemigos voladores
                     } else if (tileXPlataformaDerecha + 1 <= anchoMapaTiles() - 1) {
-                        int TileEnemigoDerecho = tileXPlataformaDerecha * Tile.ancho + Tile.ancho;
-                        double distanciaX = TileEnemigoDerecho - (plataforma.x + plataforma.ancho / 2);
+                        int TilePlataformaDerecha = tileXPlataformaDerecha * Tile.ancho + Tile.ancho;
+                        double distanciaX = TilePlataformaDerecha - (plataforma.x + plataforma.ancho / 2);
 
                         if (distanciaX > 0) {
                             double velocidadNecesaria = Math.min(distanciaX, plataforma.velocidadX);
@@ -730,8 +730,8 @@ public class Nivel {
 
                     } else if (tileXPlataformaIzquierda - 1 >= 0) {
                         giradoPlataforma = false;
-                        int TileEnemigoIzquierdo = tileXPlataformaIzquierda * Tile.ancho;
-                        double distanciaX = (plataforma.x - plataforma.ancho / 2) - TileEnemigoIzquierdo;
+                        int TilePlataformaIzquierda = tileXPlataformaIzquierda * Tile.ancho;
+                        double distanciaX = (plataforma.x - plataforma.ancho / 2) - TilePlataformaIzquierda;
 
                         if (distanciaX > 0) {
                             double velocidadNecesaria =
@@ -746,12 +746,12 @@ public class Nivel {
                     }
                 }
             }
-            if(jugador.colisiona(plataforma)){
-                jugador.x+=plataforma.velocidadX;
+            if (jugador.colisiona(plataforma)) {
+                jugador.x += plataforma.velocidadX;
             }
-            for(Enemigo enemigo:enemigos){
-                if(enemigo.colisiona(plataforma)){
-                    enemigo.x+=plataforma.velocidadX;
+            for (Enemigo enemigo : enemigos) {
+                if (enemigo.colisiona(plataforma)) {
+                    enemigo.x += plataforma.velocidadX;
                 }
             }
         }
@@ -769,47 +769,78 @@ public class Nivel {
             int tileYCajaCentro =
                     (int) caja.y / Tile.altura;
             int tileYCajaSuperior = (int) (caja.y - (caja.altura / 2 - 1)) / Tile.altura;
-            int tileJugador =  (int) jugador.x / Tile.ancho;
-            int tilePiesJugador = (int) jugador.y/Tile.altura +1;
-            if(jugador.getVelocidadX()>0){
-                if(jugador.colisiona(caja) && tileJugador==tileXCajaIzquierda){
-                   caja.x +=jugador.getVelocidadX();
-                    encimaCaja=false;
-                }
-                if(jugador.colisiona(caja) && jugador.enElAire){
-                    jugador.y = (caja.y - (caja.altura+jugador.altura/2));
-                    jugador.enElAire=false;
-                    encimaCaja=true;
-                }
-            }
-            else{
-                if(jugador.colisiona(caja) && tileJugador==tileXCajaDerecha){
+            int tileJugador = (int) jugador.x / Tile.ancho;
+            if (jugador.getVelocidadX() > 0) {
+                if (jugador.colisiona(caja) && tileJugador == tileXCajaIzquierda && mapaTiles[tileXCajaDerecha][tileYCajaCentro].tipoDeColision == Tile.PASABLE
+                        && mapaTiles[tileXCajaDerecha][tileYCajaInferior + 1].tipoDeColision == Tile.SOLIDO && tileXCajaDerecha + 1 <= anchoMapaTiles() - 1) {
                     caja.x += jugador.getVelocidadX();
-                    encimaCaja=false;
-
-                }
-                if(jugador.colisiona(caja) && jugador.enElAire){
-                    jugador.y = (caja.y - (caja.altura+jugador.altura/2));
-                    jugador.enElAire=false;
+                    encimaCaja = false;
+                } else if (jugador.colisiona(caja) && tileYJugadorInferior == tileYCajaCentro && !encimaCaja && jugador.enElAire) {
+                    jugador.y = (caja.y - (caja.altura));
+                    jugador.enElAire = false;
                     encimaCaja = true;
+                } else if (jugador.colisiona(caja) && encimaCaja) {
+                    jugador.enElAire = false;
+                    encimaCaja = true;
+                } else if (!jugador.colisiona(caja) && (tileJugador >= tileXCajaDerecha || tileYJugadorCentro < tileYCajaSuperior+1)) {
+                    jugador.enElAire = true;
+                    encimaCaja = false;
+                }
+            } else if (jugador.getVelocidadX() < 0) {
+                if (jugador.colisiona(caja) && tileJugador == tileXCajaDerecha && mapaTiles[tileXCajaIzquierda][tileYCajaCentro].tipoDeColision == Tile.PASABLE
+                        && mapaTiles[tileXCajaIzquierda][tileYCajaInferior + 1].tipoDeColision == Tile.SOLIDO && tileXCajaIzquierda - 1 >= 0) {
+                    caja.x += jugador.getVelocidadX();
+                    encimaCaja = false;
+                } else if (jugador.colisiona(caja) && tileYJugadorInferior == tileYCajaCentro && !encimaCaja && jugador.enElAire) {
+                    jugador.y = (caja.y - (caja.altura));
+                    jugador.enElAire = false;
+                    encimaCaja = true;
+                } else if (jugador.colisiona(caja) && encimaCaja) {
+                    jugador.enElAire = false;
+                    encimaCaja = true;
+                } else if (!jugador.colisiona(caja) && (tileJugador <= tileXCajaIzquierda || tileYJugadorCentro < tileYCajaSuperior+1)) {
+                    jugador.enElAire = true;
+                    encimaCaja = false;
+                }
+            } else {
+                if (jugador.colisiona(caja) && tileYJugadorInferior == tileYCajaCentro && !encimaCaja && jugador.enElAire) {
+                    jugador.y = (caja.y - (caja.altura));
+                    jugador.enElAire = false;
+                    encimaCaja = true;
+                } else if (jugador.colisiona(caja) && encimaCaja) {
+                    jugador.enElAire = false;
+                    encimaCaja = true;
+                } else if (tileJugador==tileYCajaCentro && !jugador.colisiona(caja) && tileYJugadorCentro < tileYCajaSuperior+1) {
+                    jugador.enElAire = true;
+                    encimaCaja = false;
                 }
             }
+            for (Enemigo enemigo : enemigos) {
+                if (enemigo.colisiona(caja)) {
+                    enemigo.girar();
+                }
+            }
+            for (Plataforma plataforma : plataformas) {
+                if (plataforma.colisiona(caja)) {
+                    plataforma.girar();
+                }
+            }
+
 
         }
-        for(Puerta puerta:puertas){
-            for(Puerta puerta2:puertas){
-                if(puerta!=puerta2){
-                    if(puerta.numero==puerta2.numero){
-                        if(jugador.colisiona(puerta) && entraPuerta && System.currentTimeMillis()-tiempoEspera >=2000){
+        for (Puerta puerta : puertas) {
+            for (Puerta puerta2 : puertas) {
+                if (puerta != puerta2) {
+                    if (puerta.numero == puerta2.numero) {
+                        if (jugador.colisiona(puerta) && entraPuerta && System.currentTimeMillis() - tiempoEspera >= 2000) {
                             jugador.x = puerta2.getX();
-                            jugador.y = puerta2.getY()-Tile.altura;
-                            entraPuerta=false;
+                            jugador.y = puerta2.getY() - Tile.altura;
+                            entraPuerta = false;
                             tiempoEspera = System.currentTimeMillis();
-                        }
-                        else if(jugador.colisiona(puerta2) && entraPuerta && System.currentTimeMillis()-tiempoEspera >=2000){
+                        } else if (jugador.colisiona(puerta2) && entraPuerta && System.currentTimeMillis() - tiempoEspera >= 2000) {
                             jugador.x = puerta.getX();
-                            jugador.y = puerta.getY()-Tile.altura;
-                            entraPuerta=false;
+                            jugador.y = puerta.getY() - Tile.altura;
+                            entraPuerta = false;
                             tiempoEspera = System.currentTimeMillis();
                         }
                     }
@@ -896,7 +927,7 @@ public class Nivel {
             }
         }
         // Gravedad Jugador
-        if (jugador.enElAire && !encimaCaja) {
+        if (jugador.enElAire) {
             // Recordar los ejes:
             // - es para arriba       + es para abajo.
             jugador.setVelocidadY(jugador.getVelocidadY() + velocidadGravedad);
@@ -1047,7 +1078,7 @@ public class Nivel {
                     mapaTiles[tileXJugadorIzquierda][tileYJugadorInferior + 1].tipoDeColision
                             == Tile.PASABLE
                     && mapaTiles[tileXJugadorDerecha][tileYJugadorInferior + 1].tipoDeColision
-                    == Tile.PASABLE ) {
+                    == Tile.PASABLE) {
                 // si los dos están libres cae
                 jugador.y += jugador.getVelocidadY();
                 jugador.enElAire = true; // Sigue en el aire o se cae
