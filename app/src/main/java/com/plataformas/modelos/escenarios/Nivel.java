@@ -57,6 +57,7 @@ public class Nivel {
     private List<Plataforma> plataformas;
     private List<Puerta> puertas;
     private List<Caja> cajas;
+    private List<Destructible> destructibles;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
@@ -89,6 +90,7 @@ public class Nivel {
     public void inicializar() throws Exception {
         if (!checkPoint) {
             entraPuerta = false;
+            destructibles = new ArrayList<>();
             cajas = new ArrayList<>();
             plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
@@ -178,6 +180,9 @@ public class Nivel {
             for (Caja caja : cajas) {
                 caja.dibujar(canvas);
             }
+            for (Destructible destructible:destructibles){
+                destructible.dibujar(canvas);
+            }
             jugador.dibujar(canvas);
 
             meta.dibujar(canvas);
@@ -263,6 +268,12 @@ public class Nivel {
                 enemigos.add(new EnemigoVolador(context, xCentroAbajoTileV, yCentroAbajoTileV));
 
                 return new Tile(null, Tile.PASABLE);
+            case 'W':
+                int xCentroAbajoTileW = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileW = y * Tile.altura + Tile.altura;
+                destructibles.add(new Destructible(context, xCentroAbajoTileW, yCentroAbajoTileW));
+
+                return new Tile(null, Tile.SOLIDO);
             case 'E':
                 // Enemigo
                 // Posición centro abajo
@@ -978,11 +989,27 @@ public class Nivel {
 
         for (Iterator<SavePoint> iterator = savePoints.iterator(); iterator.hasNext(); ) {
             SavePoint savePoint = iterator.next();
+
             if (jugador.colisiona(savePoint) && !savePoint.getSalvado()) {
                 jugador.setPosicionInicial(savePoint.getxSalvada(), savePoint.getySalvada());
                 savePoint.setSalvado(true);
                 savePoint.changeImage();
                 checkPoint = true;
+            }
+        }
+
+        for(Iterator<Destructible> iterator = destructibles.iterator(); iterator.hasNext();){
+            Destructible destructible = iterator.next();
+
+            int tileXDestruc = (int) destructible.x / Tile.ancho;
+            int tileYDestruc = (int) destructible.y / Tile.altura;
+            if(jugador.colisiona(destructible) && destructible.tiempoPiso==0){
+                destructible.tiempoPiso = System.currentTimeMillis();
+            }
+            if(destructible.tiempoPiso>0 && System.currentTimeMillis()-destructible.tiempoPiso>=1000){
+                mapaTiles[tileXDestruc][tileYDestruc] = new Tile(null,Tile.PASABLE);
+                iterator.remove();
+                continue;
             }
         }
 
