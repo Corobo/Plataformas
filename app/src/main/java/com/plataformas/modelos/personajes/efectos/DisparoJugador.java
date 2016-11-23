@@ -16,6 +16,8 @@ import com.plataformas.modelos.personajes.jugadores.Jugador;
 
 public class DisparoJugador extends Disparo {
 
+    public int rebotes = 5;
+
     public DisparoJugador(Context context, double xInicial, double yInicial,int orientacion) {
         super(context, xInicial, yInicial);
 

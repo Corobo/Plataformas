@@ -452,6 +452,17 @@ public class Nivel {
                                 == Tile.PASABLE) {
 
                     disparoJugador.x += disparoJugador.velocidadX;
+                    disparoJugador.y += velocidadGravedad;
+
+                }else if (tileXDisparo + 1 <= anchoMapaTiles() - 1 &&
+                        mapaTiles[tileXDisparo + 1][tileYDisparoInferior].tipoDeColision
+                                == Tile.SOLIDO &&
+                        mapaTiles[tileXDisparo + 1][tileYDisparoSuperior].tipoDeColision
+                                == Tile.PASABLE && disparoJugador.rebotes>0 ) {
+
+                    disparoJugador.x += disparoJugador.velocidadX/2;
+                    disparoJugador.y -= velocidadGravedad;
+                    disparoJugador.rebotes--;
 
                 } else if (tileXDisparo <= anchoMapaTiles() - 1) {
 
@@ -468,8 +479,8 @@ public class Nivel {
                         continue;
                     }
                 }
-
             }
+
             // izquierda
             if (disparoJugador.velocidadX <= 0) {
                 if (tileXDisparo - 1 >= 0 &&
@@ -480,10 +491,21 @@ public class Nivel {
                                 Tile.PASABLE) {
 
                     disparoJugador.x += disparoJugador.velocidadX;
-
+                    disparoJugador.y += velocidadGravedad;
                     // No tengo un tile PASABLE detras
                     // o es el INICIO del nivel o es uno SOLIDO
-                } else if (tileXDisparo >= 0) {
+                }else if(tileXDisparo - 1 >= 0 &&
+                        tileYDisparoSuperior < altoMapaTiles() - 1 &&
+                        mapaTiles[tileXDisparo - 1][tileYDisparoSuperior].tipoDeColision ==
+                                Tile.PASABLE &&
+                        mapaTiles[tileXDisparo - 1][tileYDisparoInferior].tipoDeColision ==
+                                Tile.SOLIDO && disparoJugador.rebotes>0){
+
+                    disparoJugador.x += disparoJugador.velocidadX / 2;
+                    disparoJugador.y -= velocidadGravedad;
+                    disparoJugador.rebotes--;
+
+                }else if (tileXDisparo >= 0) {
                     // Si en el propio tile del jugador queda espacio para
                     // avanzar más, avanzo
                     int TileDisparoBordeIzquierdo = tileXDisparo * Tile.ancho;
@@ -506,6 +528,24 @@ public class Nivel {
                     enemigo.destruir();
                     iterator.remove();
                     break;
+                }
+            }
+            for(Plataforma plataforma:plataformas){
+                if(disparoJugador.colisiona(plataforma)){
+                    iterator.remove();
+                    continue;
+                }
+            }
+            for(Caja caja:cajas){
+                if(disparoJugador.colisiona(caja)){
+                    iterator.remove();
+                    continue;
+                }
+            }
+            for(Puerta puerta:puertas){
+                if(disparoJugador.colisiona(puerta)){
+                    iterator.remove();
+                    continue;
                 }
             }
         }

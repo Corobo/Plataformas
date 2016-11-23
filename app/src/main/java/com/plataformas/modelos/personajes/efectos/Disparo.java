@@ -17,7 +17,7 @@ import com.plataformas.modelos.personajes.jugadores.Jugador;
 public class Disparo extends Modelo {
 
     protected Sprite sprite;
-    public double velocidadX = 10;
+    public double velocidadX = 5;
 
     public Disparo(Context context, double xInicial, double yInicial) {
         super(context, xInicial, yInicial, 35, 35);
