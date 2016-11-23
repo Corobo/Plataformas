@@ -56,6 +56,7 @@ public class Nivel {
     private List<Enemigo> enemigos;
     private List<Plataforma> plataformas;
     private List<Puerta> puertas;
+    private List<Caja> cajas;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
@@ -73,6 +74,7 @@ public class Nivel {
     public boolean giradoPlataforma = false;
     public boolean entraPuerta;
     public long tiempoEspera;
+    public boolean encimaCaja=false;
 
     public Nivel(Context context, int numeroNivel) throws Exception {
         inicializado = false;
@@ -87,6 +89,7 @@ public class Nivel {
     public void inicializar() throws Exception {
         if (!checkPoint) {
             entraPuerta=false;
+            cajas = new ArrayList<>();
             plataformas = new ArrayList<>();
             recolectables = new ArrayList<>();
             savePoints = new ArrayList<>();
@@ -171,6 +174,9 @@ public class Nivel {
             }
             for (Puerta puerta: puertas){
                 puerta.dibujar(canvas);
+            }
+            for (Caja caja: cajas){
+                caja.dibujar(canvas);
             }
             jugador.dibujar(canvas);
 
@@ -269,6 +275,12 @@ public class Nivel {
                 int xCentroAbajoTileX = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileX = y * Tile.altura + Tile.altura;
                 plataformas.add(new Plataforma(context, xCentroAbajoTileX, yCentroAbajoTileX));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'Q':
+                int xCentroAbajoTileQ = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileQ = y * Tile.altura + Tile.altura;
+                cajas.add(new Caja(context, xCentroAbajoTileQ, yCentroAbajoTileQ));
 
                 return new Tile(null, Tile.PASABLE);
             case '9':
@@ -744,6 +756,46 @@ public class Nivel {
             }
         }
 
+        for (Iterator<Caja> iterator = cajas.iterator(); iterator.hasNext(); ) {
+
+            Caja caja = iterator.next();
+
+            int tileXCajaIzquierda =
+                    (int) (caja.x - (caja.ancho / 2 - 1)) / Tile.ancho;
+            int tileXCajaDerecha =
+                    (int) (caja.x + (caja.ancho / 2 - 1)) / Tile.ancho;
+            int tileYCajaInferior =
+                    (int) (caja.y + (caja.altura / 2 - 1)) / Tile.altura;
+            int tileYCajaCentro =
+                    (int) caja.y / Tile.altura;
+            int tileYCajaSuperior = (int) (caja.y - (caja.altura / 2 - 1)) / Tile.altura;
+            int tileJugador =  (int) jugador.x / Tile.ancho;
+            int tilePiesJugador = (int) jugador.y/Tile.altura +1;
+            if(jugador.getVelocidadX()>0){
+                if(jugador.colisiona(caja) && tileJugador==tileXCajaIzquierda){
+                   caja.x +=jugador.getVelocidadX();
+                    encimaCaja=false;
+                }
+                if(jugador.colisiona(caja) && jugador.enElAire){
+                    jugador.y = (caja.y - (caja.altura+jugador.altura/2));
+                    jugador.enElAire=false;
+                    encimaCaja=true;
+                }
+            }
+            else{
+                if(jugador.colisiona(caja) && tileJugador==tileXCajaDerecha){
+                    caja.x += jugador.getVelocidadX();
+                    encimaCaja=false;
+
+                }
+                if(jugador.colisiona(caja) && jugador.enElAire){
+                    jugador.y = (caja.y - (caja.altura+jugador.altura/2));
+                    jugador.enElAire=false;
+                    encimaCaja = true;
+                }
+            }
+
+        }
         for(Puerta puerta:puertas){
             for(Puerta puerta2:puertas){
                 if(puerta!=puerta2){
@@ -844,7 +896,7 @@ public class Nivel {
             }
         }
         // Gravedad Jugador
-        if (jugador.enElAire) {
+        if (jugador.enElAire && !encimaCaja) {
             // Recordar los ejes:
             // - es para arriba       + es para abajo.
             jugador.setVelocidadY(jugador.getVelocidadY() + velocidadGravedad);
@@ -987,7 +1039,7 @@ public class Nivel {
         }
 
         // Hacia abajo
-        if (jugador.getVelocidadY() >= 0) {
+        if (jugador.getVelocidadY() >= 0 && !encimaCaja) {
             // Tile inferior PASABLE
             // Podemos seguir moviendo hacia abajo
             // NOTA - El ultimo tile es especial (caer al vacío )
@@ -995,7 +1047,7 @@ public class Nivel {
                     mapaTiles[tileXJugadorIzquierda][tileYJugadorInferior + 1].tipoDeColision
                             == Tile.PASABLE
                     && mapaTiles[tileXJugadorDerecha][tileYJugadorInferior + 1].tipoDeColision
-                    == Tile.PASABLE) {
+                    == Tile.PASABLE ) {
                 // si los dos están libres cae
                 jugador.y += jugador.getVelocidadY();
                 jugador.enElAire = true; // Sigue en el aire o se cae
