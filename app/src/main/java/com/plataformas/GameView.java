@@ -134,9 +134,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
                             pulsacionPadMover = true;
                             nivel.orientacionPad = orientacion;
                         }
-                        else if(orientacionY!=0){
+                        else if(orientacionY<0){
                             pulsacionPadMover=false;
+                            nivel.orientacionPadY = orientacionY;
                             nivel.entraPuerta=true;
+                            nivel.padAbajoPulsado=true;
+                        }
+                        else if(orientacionY>0){
+                            pulsacionPadMover=false;
+                            nivel.orientacionPadY = orientacionY;
+                            nivel.entraPuerta=true;
+                            nivel.padArribaPulsado=true;
+                        }
+                        else if(orientacionY==0){
+                            pulsacionPadMover=false;
+                            nivel.orientacionPadY = orientacionY;
+                            nivel.entraPuerta=false;
+                            nivel.padArribaPulsado=false;
                         }
                     }
                 }
@@ -232,9 +246,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
             nivel.orientacionPad = 0.5f;
         }
         if( keyCode == 47) {
-            nivel.orientacionPad = 0;
+            nivel.orientacionPadY = -0.5f;
+            nivel.padAbajoPulsado = true;
         }
         if( keyCode == 51) {
+            nivel.orientacionPadY = 0.5f;
+            nivel.padArribaPulsado = true;
+        }
+        if( keyCode == 33) {
             nivel.botonSaltarPulsado = true;
         }
         if( keyCode == 62) {

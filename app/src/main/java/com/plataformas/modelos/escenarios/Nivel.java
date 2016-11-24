@@ -46,6 +46,7 @@ public class Nivel {
     private Tile[][] mapaTiles;
 
     public float orientacionPad = 0;
+    public float orientacionPadY = 0;
     public boolean botonSaltarPulsado = false;
 
     public static int scrollEjeX = 0;
@@ -58,6 +59,7 @@ public class Nivel {
     private List<Puerta> puertas;
     private List<Caja> cajas;
     private List<Destructible> destructibles;
+    private List<Escalera> escaleras;
 
     private List<Disparo> disparosJugador;
     private List<Disparo> disparosEnemigos;
@@ -66,6 +68,8 @@ public class Nivel {
     private List<SavePoint> savePoints;
 
     public boolean botonDispararPulsado = false;
+    public boolean padArribaPulsado = false;
+    public boolean padAbajoPulsado = false;
 
     public GameView gameView;
 
@@ -90,6 +94,7 @@ public class Nivel {
     public void inicializar() throws Exception {
         if (!checkPoint) {
             entraPuerta = false;
+            escaleras = new ArrayList<>();
             destructibles = new ArrayList<>();
             cajas = new ArrayList<>();
             plataformas = new ArrayList<>();
@@ -182,6 +187,9 @@ public class Nivel {
             }
             for (Destructible destructible:destructibles){
                 destructible.dibujar(canvas);
+            }
+            for(Escalera escalera:escaleras){
+                escalera.dibujar(canvas);
             }
             jugador.dibujar(canvas);
 
@@ -280,6 +288,14 @@ public class Nivel {
                 int xCentroAbajoTileE = x * Tile.ancho + Tile.ancho / 2;
                 int yCentroAbajoTileE = y * Tile.altura + Tile.altura;
                 enemigos.add(new EnemigoBasico(context, xCentroAbajoTileE, yCentroAbajoTileE));
+
+                return new Tile(null, Tile.PASABLE);
+            case 'R':
+                // Enemigo
+                // Posición centro abajo
+                int xCentroAbajoTileEs = x * Tile.ancho + Tile.ancho / 2;
+                int yCentroAbajoTileEs = y * Tile.altura + Tile.altura;
+                escaleras.add(new Escalera(context, xCentroAbajoTileEs, yCentroAbajoTileEs));
 
                 return new Tile(null, Tile.PASABLE);
             case 'X':
@@ -441,6 +457,7 @@ public class Nivel {
                 = (int) jugador.y / Tile.altura;
         int tileYJugadorSuperior
                 = (int) (jugador.y - (jugador.altura / 2 - 1)) / Tile.altura;
+        int tileXJugador = (int) jugador.x / Tile.ancho;
 
 
         for (Iterator<Disparo> iterator = disparosJugador.iterator(); iterator.hasNext(); ) {
@@ -1011,6 +1028,28 @@ public class Nivel {
                 iterator.remove();
                 continue;
             }
+        }
+
+        for(Escalera escalera:escaleras){
+            if(jugador.colisiona(escalera) && orientacionPadY>0 && padArribaPulsado && mapaTiles[tileXJugador][tileYJugadorSuperior].tipoDeColision==Tile.PASABLE){
+                jugador.setVelocidadY(0);
+                jugador.y -= 3;
+                jugador.setVelocidadY(0);
+                padArribaPulsado=false;
+            }
+            else if(jugador.colisiona(escalera) && orientacionPadY<0 && padAbajoPulsado){
+                jugador.setVelocidadY(0);
+                jugador.y += 3;
+                jugador.setVelocidadY(0);
+                padAbajoPulsado=false;
+            }
+            else if(jugador.colisiona(escalera) && orientacionPad!=0){
+                jugador.setVelocidadY(0);
+            }
+            else if(jugador.colisiona(escalera)){
+                jugador.setVelocidadY(0);
+            }
+
         }
 
         // derecha o parado
