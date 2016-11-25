@@ -14,9 +14,9 @@ public class BotonDisparar extends Modelo {
 
     public BotonDisparar(Context context) {
         super(context, GameView.pantallaAncho*0.85 , GameView.pantallaAlto*0.6,
-                70,70);
+                100,100);
 
-        imagen = CargadorGraficos.cargarDrawable(context, R.drawable.buttonfire);
+        imagen = CargadorGraficos.cargarDrawable(context, R.drawable.pad);
     }
 
     public boolean estaPulsado(float clickX, float clickY) {
@@ -27,6 +27,37 @@ public class BotonDisparar extends Modelo {
             estaPulsado = true;
         }
         return estaPulsado;
+    }
+
+    public int getOrientacionX(float cliclX) {
+        return (int) (x - cliclX);
+
+    }
+    public int getOrientacionY(float clicY){
+        return (int) (y - clicY);
+    }
+
+    public int calcularAngulo(float orientacionX,float orientacionY){
+        if(orientacionX<15 && orientacionX>-15){
+            if(orientacionY>25){
+                return 90;
+            }
+            if(orientacionY<-20){
+                return -90;
+            }
+        }
+        else if(orientacionX>15 || orientacionX<-15){
+            if(orientacionY>15){
+                return 45;
+            }
+            if(orientacionY>5 && orientacionY<15){
+                return 0;
+            }
+            if(orientacionY<-15){
+                return -45;
+            }
+        }
+        return 0;
     }
 }
 

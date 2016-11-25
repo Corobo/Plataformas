@@ -18,7 +18,7 @@ public class DisparoJugador extends Disparo {
 
     public int rebotes = 5;
 
-    public DisparoJugador(Context context, double xInicial, double yInicial,int orientacion) {
+    public DisparoJugador(Context context, double xInicial, double yInicial,int orientacion,int angulo) {
         super(context, xInicial, yInicial);
 
         if (orientacion == Jugador.IZQUIERDA)
@@ -28,6 +28,8 @@ public class DisparoJugador extends Disparo {
         cIzquierda = 6;
         cArriba = 6;
         cAbajo = 6;
+
+        this.angulo = angulo;
 
         inicializar();
     }

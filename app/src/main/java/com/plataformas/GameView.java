@@ -112,8 +112,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
                 }
 
                 if (botonDisparar.estaPulsado(x[i], y[i])) {
+
+                    float orientacion = botonDisparar.getOrientacionX(x[i]);
+                    float orientacionY = botonDisparar.getOrientacionY(y[i]);
+
+                    int anguloDisparo = botonDisparar.calcularAngulo(orientacion,orientacionY);
+
                     if (accion[i] == ACTION_DOWN) {
-                        nivel.botonDispararPulsado = true;
+                        if(orientacion!=0 && orientacionY!=0) {
+                            nivel.botonDispararPulsado = true;
+                            nivel.orientacionDisparoY = orientacionY;
+                            nivel.anguloDisparo=anguloDisparo;
+                        }
+                        else if(orientacion!=0 && orientacionY==0) {
+                            nivel.botonDispararPulsado = true;
+                            nivel.orientacionDisparoY = orientacionY;
+                            nivel.anguloDisparo=anguloDisparo;
+                        }
+                        else{
+                            nivel.botonDispararPulsado=true;
+                        }
+
                     }
                 }
 

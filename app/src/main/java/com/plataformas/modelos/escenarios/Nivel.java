@@ -53,6 +53,8 @@ public class Nivel {
     public static int scrollEjeY = 0;
     private float velocidadGravedad = 0.8f;
     private float velocidadMaximaCaida = 10;
+    public float orientacionDisparoY = 0.0f;
+    public int anguloDisparo = 0;
 
     private List<Enemigo> enemigos;
     private List<Plataforma> plataformas;
@@ -146,7 +148,7 @@ public class Nivel {
             }
             if (botonDispararPulsado) {
                 gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_DISPARO_JUGADOR);
-                disparosJugador.add(new DisparoJugador(context, jugador.x, jugador.y, jugador.orientacion));
+                disparosJugador.add(new DisparoJugador(context, jugador.x, jugador.y, jugador.orientacion,anguloDisparo));
                 botonDispararPulsado = false;
             }
 
@@ -479,7 +481,32 @@ public class Nivel {
                         mapaTiles[tileXDisparo + 1][tileYDisparoSuperior].tipoDeColision
                                 == Tile.PASABLE) {
 
-                    disparoJugador.x += disparoJugador.velocidadX;
+                    if(disparoJugador.angulo==0) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                    }
+                    else if(disparoJugador.angulo==45 && disparoJugador.y-3>0 && disparoJugador.impulsos>0) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                        disparoJugador.y -= disparoJugador.velocidadY;
+                        disparoJugador.impulsos--;
+                    }
+                    else if(disparoJugador.angulo==90 && disparoJugador.y-3>0 && disparoJugador.impulsos>0) {
+                        disparoJugador.y -= disparoJugador.velocidadY;
+                        disparoJugador.impulsos--;
+                    }
+                    else if(disparoJugador.angulo==-45) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                        disparoJugador.y += disparoJugador.velocidadY;
+                    }
+                    else if(disparoJugador.angulo==-90) {
+                        disparoJugador.y +=  disparoJugador.velocidadY-velocidadGravedad;
+                    }
+                    else if((disparoJugador.angulo==45 || disparoJugador.angulo==90) && disparoJugador.y-3<0){
+                        iterator.remove();
+                        continue;
+                    }
+                    else if(disparoJugador.impulsos<=0 && disparoJugador.angulo!=90 && disparoJugador.angulo!=-90){
+                        disparoJugador.x += disparoJugador.velocidadX;
+                    }
                     disparoJugador.y += velocidadGravedad;
 
                 }else if (tileXDisparo + 1 <= anchoMapaTiles() - 1 &&
@@ -518,7 +545,32 @@ public class Nivel {
                         mapaTiles[tileXDisparo - 1][tileYDisparoInferior].tipoDeColision ==
                                 Tile.PASABLE) {
 
-                    disparoJugador.x += disparoJugador.velocidadX;
+                    if(disparoJugador.angulo==0) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                    }
+                    else if(disparoJugador.angulo==45 && disparoJugador.y-3>0 && disparoJugador.impulsos>0) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                        disparoJugador.y -= disparoJugador.velocidadY;
+                        disparoJugador.impulsos--;
+                    }
+                    else if(disparoJugador.angulo==90 && disparoJugador.y-3>0 && disparoJugador.impulsos>0) {
+                        disparoJugador.y -= 4;
+                        disparoJugador.impulsos--;
+                    }
+                    else if(disparoJugador.angulo==-45) {
+                        disparoJugador.x += disparoJugador.velocidadX;
+                        disparoJugador.y +=  disparoJugador.velocidadY;
+                    }
+                    else if(disparoJugador.angulo==-90) {
+                        disparoJugador.y +=  disparoJugador.velocidadY-velocidadGravedad;
+                    }
+                    else if((disparoJugador.angulo==45 || disparoJugador.angulo==90) && disparoJugador.y-3<0){
+                        iterator.remove();
+                        continue;
+                    }
+                    else if(disparoJugador.impulsos<=0 && disparoJugador.angulo!=90 && disparoJugador.angulo!=-90){
+                        disparoJugador.x += disparoJugador.velocidadX;
+                    }
                     disparoJugador.y += velocidadGravedad;
                     // No tengo un tile PASABLE detras
                     // o es el INICIO del nivel o es uno SOLIDO
