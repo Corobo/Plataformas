@@ -2,9 +2,11 @@ package com.plataformas.modelos.personajes.jugadores;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Path;
 
 import com.plataformas.R;
 import com.plataformas.gestores.CargadorGraficos;
+import com.plataformas.gestores.Opciones;
 import com.plataformas.graficos.Sprite;
 import com.plataformas.modelos.Modelo;
 import com.plataformas.modelos.escenarios.Nivel;
@@ -58,7 +60,7 @@ public class Jugador extends Modelo {
     public static final String DISPARANDO_IZQUIERDA = "disparando_izquierda";
 
 
-    public Jugador(Context context, double xInicial, double yInicial) {
+    public Jugador(Context context, double xInicial, double yInicial,int vidas) {
         super(context, 0, 0, 40, 40);
 
         // guardamos la posición inicial porque más tarde vamos a reiniciarlo
@@ -67,7 +69,7 @@ public class Jugador extends Modelo {
 
         this.x =  this.xInicial;
         this.y =  this.yInicial;
-        vidas = 3;
+        this.vidas = vidas;
 
         inicializar();
     }
@@ -238,7 +240,10 @@ public class Jugador extends Modelo {
 
 
     public void restablecerPosicionInicial(){
-        vidas = 3;
+        if(Opciones.dificultad)
+            vidas = 1;
+        else
+            vidas = 3;
         golpeado = false;
         msInmunidad = 0;
 

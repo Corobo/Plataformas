@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 public class SeleccionModo extends Activity implements View.OnClickListener {
 
     ImageButton unJugador;
-    ImageButton dosJugadores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class SeleccionModo extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_seleccion_modo);
 
         unJugador = (ImageButton) findViewById(R.id.unJugadorButton);
-        dosJugadores = (ImageButton) findViewById(R.id.dosJugadoresButton);
         unJugador.setOnClickListener(this);
 
     }
@@ -38,15 +36,7 @@ public class SeleccionModo extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if(v==unJugador){
             Intent actividadJuego = new Intent(SeleccionModo.this,
-                    MainActivity.class);
-            actividadJuego.putExtra("Modo","Un jugador");
-            startActivity(actividadJuego);
-            finish();
-        }
-        if(v==dosJugadores){
-            Intent actividadJuego = new Intent(SeleccionModo.this,
-                    MainActivity.class);
-            actividadJuego.putExtra("Modo","Dos jugadores");
+                    OpcionesActivity.class);
             startActivity(actividadJuego);
             finish();
         }

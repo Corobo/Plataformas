@@ -22,14 +22,4 @@
         android:id="@+id/unJugadorButton"
         android:background="@drawable/boton_one" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/boton_two"
-        android:layout_marginTop="17dp"
-        android:id="@+id/dosJugadoresButton"
-        android:layout_below="@+id/unJugadorButton"
-        android:layout_alignLeft="@+id/unJugadorButton"
-        android:layout_alignStart="@+id/unJugadorButton"
-        android:background="@drawable/boton_two" />
 </RelativeLayout>

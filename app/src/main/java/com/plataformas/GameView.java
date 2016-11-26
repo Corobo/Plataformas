@@ -2,6 +2,7 @@ package com.plataformas;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Path;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -9,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.plataformas.gestores.GestorAudio;
+import com.plataformas.gestores.Opciones;
 import com.plataformas.modelos.escenarios.Nivel;
 import com.plataformas.modelos.controles.BotonDisparar;
 import com.plataformas.modelos.controles.BotonSaltar;
@@ -187,6 +189,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         botonDisparar = new BotonDisparar(context);
         nivel = new Nivel(context,numeroNivel);
         nivel.gameView = this;
+        if(!Opciones.musica)
+            gestorAudio.pararMusicaAmbiente();
     }
 
     public void inicializarGestorAudio(Context context) {
