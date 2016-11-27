@@ -676,7 +676,7 @@ public class Nivel {
                     tileXJugadorIzquierda + rango > tileXEnemigoIzquierda) {
 
                 if (jugador.colisiona(enemigo)) {
-                    if(Opciones.efectos)
+                    if (Opciones.efectos)
                         gameView.gestorAudio.reproducirSonido(GestorAudio.SONIDO_JUGADOR_GOLPEADO);
                     if (jugador.golpeado() <= 0) {
                         nivelPausado = true;
@@ -686,14 +686,34 @@ public class Nivel {
                         return;
                     }
                 }
-                long tiempo = System.currentTimeMillis();
-                if (enemigo.estado == Estado.ACTIVO) {
-                    if (enemigo instanceof EnemigoAmpliacion) {
-                        DisparoEnemigo disparo = (DisparoEnemigo) ((EnemigoAmpliacion) enemigo).disparar(tiempo);
-                        if (disparo != null) {
-                            disparosEnemigos.add(disparo);
+                if (tileYJugadorCentro == tileYEnemigoCentro && jugador.getVelocidadX() > 0 && enemigo.velocidadX < 0) {
+                    long tiempo = System.currentTimeMillis();
+                    if (enemigo.estado == Estado.ACTIVO) {
+                        if (enemigo instanceof EnemigoAmpliacion) {
+                            DisparoEnemigo disparo = (DisparoEnemigo) ((EnemigoAmpliacion) enemigo).disparar(tiempo);
+                            if (disparo != null) {
+                                disparosEnemigos.add(disparo);
+                            }
                         }
                     }
+                }else if (tileYJugadorCentro == tileYEnemigoCentro && jugador.getVelocidadX() < 0 && enemigo.velocidadX > 0) {
+                    long tiempo = System.currentTimeMillis();
+                    if (enemigo.estado == Estado.ACTIVO) {
+                        if (enemigo instanceof EnemigoAmpliacion) {
+                            DisparoEnemigo disparo = (DisparoEnemigo) ((EnemigoAmpliacion) enemigo).disparar(tiempo);
+                            if (disparo != null) {
+                                disparosEnemigos.add(disparo);
+                            }
+                        }
+                    }
+                }else if (jugador.enElAire && jugador.getVelocidadX() < 0 && enemigo.velocidadX > 0 && !enemigo.enElAire) {
+                    enemigo.yAntes = enemigo.y;
+                    enemigo.y -= enemigo.altura;
+                    enemigo.enElAire = true;
+                }else if (jugador.enElAire && jugador.getVelocidadX() > 0 && enemigo.velocidadX < 0 && !enemigo.enElAire) {
+                    enemigo.yAntes = enemigo.y;
+                    enemigo.y -= enemigo.altura;
+                    enemigo.enElAire = true;
                 }
             }
 
@@ -788,6 +808,16 @@ public class Nivel {
                     enemigo.girar();
                 }
             }
+            if(enemigo.enElAire){
+                if(enemigo.y + velocidadGravedad*2 < enemigo.yAntes) {
+                    enemigo.y += velocidadGravedad*2;
+                }
+                else {
+                    enemigo.y = enemigo.yAntes;
+                    enemigo.enElAire = false;
+                }
+
+            }
 
         }
 
@@ -874,6 +904,7 @@ public class Nivel {
                     }
                 }
             }
+
             if (jugador.colisiona(plataforma)) {
                 jugador.x += plataforma.velocidadX;
             }

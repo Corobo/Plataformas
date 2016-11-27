@@ -33,6 +33,8 @@ public class Enemigo extends Modelo {
 
     public static final int DERECHA = 1;
     public static final int IZQUIERDA = -1;
+    public boolean enElAire;
+    public double yAntes;
 
 
     public Enemigo(Context context, double xInicial, double yInicial) {
